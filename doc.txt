@@ -1,0 +1,694 @@
+==================================================
+Documentation officielle — JobMaster
+Guide d’écriture des scripts YAML pour l’orchestrateur
+Version : 1.2 — Date : 26 février 2026
+==================================================
+
+==================================================
+1) Objectif
+==================================================
+
+Standardiser la définition et l’exécution de workflows Data Engineering via :
+
+  - des fichiers YAML (un « script » = un workflow),
+  - des scripts SQL séparés : .gql (BigQuery) et .dql (Teradata),
+  - un catalogue de job_id couvrant import, traitement, alimentation, transferts, extractions, export,
+  - une arborescence par domaine et type (Import / Alimentation / Export).
+
+Exécution : séquentielle et stricte, selon l’ordre des jobs.
+Résolution automatique des SQL par le backend, en fonction de l’emplacement du YAML :
+  <type>/config/mon_script.yml  →  <type>/sql/
+
+==================================================
+2) Architecture des répertoires
+==================================================
+
+DOMAINE/
+  Import/
+    config/            (YAML de workflows)
+    sql/               (SQL .gql / .dql)
+    installation/
+      config/          (YAML d’initialisation uniquement)
+      sql/             (SQL d’initialisation : CREATE, GRANT, seed)
+  Alimentation/
+    config/
+    sql/
+    installation/
+      config/
+      sql/
+  Export/
+    config/
+    sql/
+    installation/
+      config/
+      sql/
+
+Règle de résolution : un YAML placé dans Alimentation/config/ fait rechercher ses .gql/.dql dans Alimentation/sql/.
+Installation : les scripts sous installation/sql/ créent en amont les tables et vues (exécutés une seule fois, hors moteur de jobs).
+
+==================================================
+3) Format OFFICIEL d’un script YAML
+==================================================
+
+script:
+  id_script: Domaine_Type_Nom            # string unique, format OBLIGATOIRE
+  description: Description du workflow    # string
+
+  parametres_env:                         # dictionnaire de variables du script
+    MA_VARIABLE: "valeur1"
+    TABLE_CIBLE: £BQ_SOCLE.clients       # composition avec une variable globale
+
+  jobs:
+    - job_id: job.run.sql                 # job_id du catalogue
+      description: Description du job     # string
+      parametres:                         # dictionnaire, TOUS les paramètres sont OBLIGATOIRES
+        Parametre1: £MA_VARIABLE          # référence à parametres_env
+        Parametre2: valeur_directe        # valeur en dur
+
+    - job_id: job.run.create_view         # un second job, séparé par une ligne vide
+      description: Autre job du workflow
+      parametres:
+        Plateforme: BQ
+        Table: £TABLE_CIBLE
+
+Contraintes générales :
+
+  - jobs est une LISTE YAML (préfixe « - »).
+  - Par job : uniquement job_id, description, parametres (et, pour process.*, un bloc enfants "jobs:" indenté).
+  - Aucun champ "type:" n’existe dans la structure YAML.
+  - Le symbole « £ » est le préfixe des variables (ex. £BQ_SOCLE, £DATE, £MA_VARIABLE).
+  - Le symbole « # » est réservé aux commentaires YAML.
+  - Indentation : 2 espaces, aucun onglet.
+  - L’ordre des paramètres dans un job est libre.
+  - Tous les paramètres listés pour un job_id sont OBLIGATOIRES, sans exception.
+  - Aération : insérer une ligne vide après la description, après parametres_env, et entre chaque job.
+
+==================================================
+4) Variables
+==================================================
+
+4.1 — Préfixe et syntaxe
+--------------------------------------------------
+
+  - Toute variable est préfixée par « £ ». Exemples : £BQ_SOCLE, £DATE, £REP_IN.
+  - Les variables sont substituées automatiquement :
+      • dans les valeurs des paramètres du YAML,
+      • dans les fichiers SQL (.gql/.dql) référencés par les jobs du script.
+  - Composition autorisée dans parametres_env :
+      TBL_CLIENTS: £BQ_SOCLE.clients  →  résolu en "<valeur_de_BQ_SOCLE>.clients"
+
+4.2 — Variables globales (injectées automatiquement par le moteur)
+--------------------------------------------------
+
+  Plateformes & datasets :
+    £BQ_SOURCE   — Dataset source BigQuery
+    £BQ_SOCLE    — Dataset socle BigQuery (tables de référence)
+    £BQ_TMP      — Dataset temporaire BigQuery (staging)
+    £BQ_HISTO    — Dataset historique BigQuery
+    £BQ_VUES     — Dataset des vues BigQuery
+    £TD_SOURCE   — Dataset source Teradata
+    £TD_SOCLE    — Dataset socle Teradata
+    £TD_TMP      — Dataset temporaire Teradata
+    £TD_HISTO    — Dataset historique Teradata
+    £TD_VUES     — Dataset des vues Teradata
+
+  Dates (calculées automatiquement à chaque exécution) :
+    £DATE        — Date du jour (AAAAMMJJ)
+    £DATETIME    — Date et heure (AAAAMMJJ_HHMMSS)
+    £YEAR        — Année (AAAA)
+    £MONTH       — Mois (MM)
+    £DAY         — Jour (JJ)
+    £YESTERDAY   — Veille (AAAAMMJJ)
+
+4.3 — Variables contextuelles (blocs enfants uniquement)
+--------------------------------------------------
+
+  £FILE_NAME        — Nom du fichier en cours de traitement.
+                      Disponible dans : job.process.cyclique (mode BoucleFichiers).
+  £ITERATION_INDEX  — Index de l’itération courante (commence à 1).
+                      Disponible dans : job.process.cyclique (tous les modes).
+
+  Ces variables n’existent PAS au niveau racine du script. Elles ne sont
+  injectées que dans les blocs enfants "jobs:" de job.process.cyclique.
+
+4.4 — Variables de script (parametres_env)
+--------------------------------------------------
+
+  Les variables déclarées dans parametres_env sont accessibles :
+    - dans tous les jobs du script YAML,
+    - dans tous les fichiers SQL (.gql/.dql) référencés par les jobs du script.
+
+  Conventions de nommage :
+    - MAJUSCULES, séparateur « _ ».
+    - Préfixes fonctionnels : BQ_/TD_ pour les plateformes, REP_ pour les répertoires, TBL_ pour les tables.
+
+==================================================
+5) Catalogue des job_id (v1.1 — 10 jobs)
+==================================================
+
+  job.fichier.effacement       Supprime des fichiers selon leur ancienneté
+  job.fichier.manipulation     Copie ou déplace des fichiers avec filtre
+  job.process.batch            Traite un lot de fichiers en masse
+  job.process.cyclique         Boucle : par temps, par fichier ou par itérations
+  job.externe.import           Importe des fichiers depuis une source distante
+  job.externe.export           Exporte des fichiers vers une destination distante
+  job.run.sql                  Exécute un script SQL (.gql/.dql)
+  job.run.transfert            Transfère des données entre plateformes
+  job.table.extraction         Extrait une table vers des fichiers locaux
+  job.run.create_view          Crée une vue automatique d’une table SOCLE
+
+==================================================
+6) Référence par job — paramètres OBLIGATOIRES
+==================================================
+
+Types possibles : string, integer, duration, regex, path, enum, platform(BQ|TD), table, dataset.
+
+Notes sur les types :
+  - duration  : entier en mois (ex. 3 = 3 mois, 12 = 1 an).
+  - regex     : expression régulière (ex. ".*\.csv$", "^rapport_\d+\.txt$").
+  - path      : chemin Windows, Linux ou Cloud Storage
+                 (ex. C:\data\in, /data/in, gs://bucket/path).
+
+--------------------------------------------------
+job.fichier.effacement
+--------------------------------------------------
+  Source   (path | £var)       — Répertoire cible de l’effacement
+  Duree    (integer | £var)    — Ancienneté en mois des fichiers à supprimer
+
+--------------------------------------------------
+job.fichier.manipulation
+--------------------------------------------------
+  Source   (path | £var)       — Répertoire source
+  Cible    (path | £var)       — Répertoire destination
+  Masque   (regex | £var)      — Expression régulière pour filtrer les fichiers
+  Mode     (enum: copie | deplacement)
+
+--------------------------------------------------
+job.process.batch
+--------------------------------------------------
+  Source   (path | £var)       — Répertoire contenant les fichiers à traiter
+  SAS      (path | £var)       — Répertoire de travail intermédiaire
+  Archive  (path | £var)       — Répertoire d’archivage post-traitement
+  Bloc enfants : "jobs:" OBLIGATOIRE
+    → Les jobs enfants sont exécutés UNE SEULE FOIS sur l’ensemble
+      des fichiers du lot (traitement en masse).
+
+--------------------------------------------------
+job.process.cyclique
+--------------------------------------------------
+  UN SEUL des paramètres suivants (mutuellement exclusifs) :
+
+    DureeRepetition    (integer | £var)  — Répète les jobs enfants toutes les X minutes
+    BoucleFichiers     (path | £var)     — Itère sur chaque fichier du répertoire (un par un)
+    NombreIterations   (integer | £var)  — Répète les jobs enfants exactement N fois
+
+  Bloc enfants : "jobs:" OBLIGATOIRE
+    → Les jobs enfants sont exécutés à chaque itération ou pour chaque fichier.
+
+  Différence avec job.process.batch :
+    - batch : traite TOUS les fichiers en une seule passe (en masse).
+    - cyclique (BoucleFichiers) : traite les fichiers UN PAR UN, séquentiellement.
+
+--------------------------------------------------
+job.externe.import
+--------------------------------------------------
+  Source   (string | path | £var)  — Adresse distante (ex. sftp://serveur/chemin ou https://api.exemple.com/endpoint)
+  Cible    (path | £var)           — Répertoire local de destination
+  Type     (enum: sftp | api)
+
+--------------------------------------------------
+job.externe.export
+--------------------------------------------------
+  Source   (path | £var)           — Répertoire local à envoyer
+  Cible    (string | path | £var)  — Adresse distante (ex. sftp://serveur/chemin ou https://api.exemple.com/endpoint)
+  Type     (enum: sftp | api)
+
+--------------------------------------------------
+job.run.sql
+--------------------------------------------------
+  Plateforme  (platform: BQ | TD)
+  Requete     (string)  — Nom du fichier .gql ou .dql (résolu automatiquement depuis <type>/sql/)
+
+--------------------------------------------------
+job.run.transfert
+--------------------------------------------------
+  PlateformeSource  (platform: BQ | TD)
+  TableSource       (table | £var)
+  PlateformeCible   (platform: BQ | TD)
+  TableCible        (table | £var)
+  Mode              (enum: FULL | INSERT | UPDATE | UPSERT)
+
+--------------------------------------------------
+job.table.extraction
+--------------------------------------------------
+  Plateforme   (platform: BQ | TD)
+  TableSource  (table | £var)
+  Destination  (path | £var)       — Répertoire local de sortie
+  NomFichier   (string | £var)     — Nom du fichier généré (variables £ autorisées, ex. clients_£DATE.csv)
+  Format       (enum: csv | json)
+
+--------------------------------------------------
+job.run.create_view
+--------------------------------------------------
+  Plateforme   (platform: BQ | TD)
+  Table        (table | £var)      — Table source (par convention, toujours une table SOCLE)
+
+  Comportement automatique :
+    - Crée une vue portant le même nom que la table dans le dataset des vues.
+    - Exemple : Table £BQ_SOCLE.clients → Vue £BQ_VUES.clients
+    - Aucun fichier SQL requis : la vue est générée automatiquement par la plateforme.
+    - Par convention, seules les tables SOCLE sont éligibles à la création de vue.
+
+==================================================
+7) Conventions de nommage
+==================================================
+
+7.1 — id_script (OBLIGATOIRE)
+--------------------------------------------------
+  Format : Domaine_Type_Nom
+  Exemples :
+    Salesforce_Import_RapatriementSFTP
+    Clients_Alimentation_UpsertSocle
+    Clients_Export_ExtractionCSV
+
+7.2 — Fichiers YAML
+--------------------------------------------------
+  - Noms en français, reflétant le contenu du script.
+  - Toujours préfixés par le domaine et le type.
+  Exemples :
+    Salesforce_import_RapatriementSFTP.yml
+    Clients_alimentation_UpsertSocle.yml
+    Clients_export_ExtractionCSV.yml
+
+7.3 — Fichiers SQL (.gql / .dql)
+--------------------------------------------------
+  - Noms pertinents, pas de convention stricte imposée.
+  - Toujours préfixés par le domaine et le type.
+  Exemples :
+    Salesforce_alimentation_upsert_contacts_socle.gql
+    Clients_import_chargement_staging.gql
+
+7.4 — Vues (job.run.create_view)
+--------------------------------------------------
+  - Par convention, les vues sont créées uniquement à partir de tables SOCLE.
+  - Le nom de la vue est identique au nom de la table source.
+  - La vue est placée dans le dataset £BQ_VUES (ou £TD_VUES).
+  - Exemple : table £BQ_SOCLE.clients → vue £BQ_VUES.clients
+
+==================================================
+8) Installation — prérequis de données (exécution unique)
+==================================================
+
+Objectif : créer en amont les tables nécessaires avant alimentation et export.
+
+Règle impérative : PAS de SQL orphelin dans installation/.
+  Chaque fichier SQL sous installation/sql/ DOIT être référencé par un YAML
+  sous installation/config/ contenant un job.run.sql correspondant.
+
+Structure par type (exemples) :
+
+  Import/installation/
+    config/Clients_installation_CreationTableStaging.yml
+    sql/Clients_creation_table_staging.gql
+
+  Alimentation/installation/
+    config/Clients_installation_CreationTableSocle.yml
+    sql/Clients_creation_table_socle.gql
+
+Exemple de YAML d'installation :
+
+  script:
+    id_script: Clients_Installation_CreationTableStaging
+    description: Création de la table staging clients
+
+    parametres_env:
+      TBL_STAGING: £BQ_TMP.staging_clients
+
+    jobs:
+      - job_id: job.run.sql
+        description: Crée la table staging clients dans BigQuery
+        parametres:
+          Plateforme: BQ
+          Requete: Clients_creation_table_staging.gql
+
+Ces scripts sont exécutés UNE SEULE FOIS lors de l'installation / onboarding.
+Ils ne font PAS partie du flux récurrent.
+
+==================================================
+9) Workflows — exemples officiels
+==================================================
+
+Séparation Import en 3 scripts : rapatriement → déplacement → traitement.
+
+--------------------------------------------------
+9.1 — Import/config/Clients_import_RapatriementSFTP.yml
+       (rapatriement SFTP → zone d’entrée)
+--------------------------------------------------
+
+# Rapatriement des fichiers clients depuis le SFTP partenaire
+script:
+  id_script: Clients_Import_RapatriementSFTP
+  description: Rapatriement des fichiers clients depuis SFTP vers la zone d’entrée
+
+  parametres_env:
+    SFTP_INBOX: sftp://partenaire/inbox
+    REP_IN: C:\data\clients\in
+
+  jobs:
+    - job_id: job.externe.import
+      description: Récupère les fichiers depuis SFTP
+      parametres:
+        Source: £SFTP_INBOX
+        Cible: £REP_IN
+        Type: sftp
+
+--------------------------------------------------
+9.2 — Import/config/Clients_import_DeplacementTravail.yml
+       (zone d’entrée → zone de travail)
+--------------------------------------------------
+
+# Déplacement des fichiers vers la zone de travail
+script:
+  id_script: Clients_Import_DeplacementTravail
+  description: Déplacement des fichiers d’entrée vers la zone de travail
+
+  parametres_env:
+    REP_IN: C:\data\clients\in
+    REP_WORK: C:\data\clients\work
+    MASQUE_CSV: ".*\.csv$"
+
+  jobs:
+    - job_id: job.fichier.manipulation
+      description: Déplace les CSV en zone de travail
+      parametres:
+        Source: £REP_IN
+        Cible: £REP_WORK
+        Masque: £MASQUE_CSV
+        Mode: deplacement
+
+--------------------------------------------------
+9.3 — Import/config/Clients_import_TraitementBatch.yml
+       (traitement en masse + archivage)
+--------------------------------------------------
+
+# Traitement de tous les fichiers en batch puis archivage
+script:
+  id_script: Clients_Import_TraitementBatch
+  description: Traitement en masse des fichiers et archivage
+
+  parametres_env:
+    REP_WORK: C:\data\clients\work
+    REP_ARCH: C:\data\clients\archive
+    MASQUE_CSV: ".*\.csv$"
+
+  jobs:
+    - job_id: job.process.batch
+      description: Charge la staging depuis tous les fichiers puis archive
+      parametres:
+        Source: £REP_WORK
+        SAS: £REP_WORK
+        Archive: £REP_ARCH
+      jobs:
+        - job_id: job.run.sql
+          description: Charge la staging depuis les fichiers (BigQuery)
+          parametres:
+            Plateforme: BQ
+            Requete: Clients_import_chargement_staging.gql
+
+        - job_id: job.fichier.manipulation
+          description: Archive les fichiers traités
+          parametres:
+            Source: £REP_WORK
+            Cible: £REP_ARCH
+            Masque: £MASQUE_CSV
+            Mode: deplacement
+
+--------------------------------------------------
+9.4 — Alimentation/config/Clients_alimentation_UpsertSocle.yml
+       (upsert SOCLE + création de vue)
+--------------------------------------------------
+
+# Alimentation du socle clients et création de la vue métier
+script:
+  id_script: Clients_Alimentation_UpsertSocle
+  description: Upsert des données vers SOCLE et création de la vue métier
+
+  parametres_env:
+    TBL_SOCLE_CLIENTS: £BQ_SOCLE.clients
+    TBL_STAGING_CLIENTS: £BQ_TMP.staging_clients
+
+  jobs:
+    - job_id: job.run.sql
+      description: Upsert SOCLE depuis STAGING (MERGE)
+      parametres:
+        Plateforme: BQ
+        Requete: Clients_alimentation_upsert_socle.gql
+
+    - job_id: job.run.create_view
+      description: Création de la vue métier clients
+      parametres:
+        Plateforme: BQ
+        Table: £TBL_SOCLE_CLIENTS
+
+--------------------------------------------------
+9.5 — Export/config/Clients_export_ExtractionCSV.yml
+       (extraction table → fichiers → SFTP)
+--------------------------------------------------
+
+# Extraction et envoi des données clients vers le partenaire
+script:
+  id_script: Clients_Export_ExtractionCSV
+  description: Extraction de la table SOCLE vers fichiers et envoi SFTP
+
+  parametres_env:
+    TBL_SOCLE_CLIENTS: £BQ_SOCLE.clients
+    REP_EXPORT: C:\data\clients\export
+    SFTP_OUTBOX: sftp://partenaire/outbox
+    NOM_FICHIER: clients_£DATE.csv
+
+  jobs:
+    - job_id: job.table.extraction
+      description: Extrait la table clients SOCLE en CSV
+      parametres:
+        Plateforme: BQ
+        TableSource: £TBL_SOCLE_CLIENTS
+        Destination: £REP_EXPORT
+        NomFichier: £NOM_FICHIER
+        Format: csv
+
+    - job_id: job.externe.export
+      description: Envoie les CSV vers le SFTP partenaire
+      parametres:
+        Source: £REP_EXPORT
+        Cible: £SFTP_OUTBOX
+        Type: sftp
+
+--------------------------------------------------
+9.6 — Exemple avec job.process.cyclique (DureeRepetition)
+--------------------------------------------------
+
+# Surveillance de répertoire avec tentative toutes les 5 minutes
+script:
+  id_script: Clients_Import_SurveillanceRepetee
+  description: Vérifie toutes les 5 minutes si des fichiers sont arrivés
+
+  parametres_env:
+    REP_IN: C:\data\clients\in
+    REP_WORK: C:\data\clients\work
+    MASQUE_CSV: ".*\.csv$"
+
+  jobs:
+    - job_id: job.process.cyclique
+      description: Répète le déplacement toutes les 5 minutes
+      parametres:
+        DureeRepetition: 5
+      jobs:
+        - job_id: job.fichier.manipulation
+          description: Déplace les fichiers arrivés
+          parametres:
+            Source: £REP_IN
+            Cible: £REP_WORK
+            Masque: £MASQUE_CSV
+            Mode: deplacement
+
+--------------------------------------------------
+9.7 — Exemple avec job.process.cyclique (BoucleFichiers)
+--------------------------------------------------
+
+# Traitement fichier par fichier (un par un)
+script:
+  id_script: Clients_Import_TraitementUnitaire
+  description: Traite chaque fichier individuellement
+
+  parametres_env:
+    REP_WORK: C:\data\clients\work
+
+  jobs:
+    - job_id: job.process.cyclique
+      description: Itère sur chaque fichier du répertoire
+      parametres:
+        BoucleFichiers: £REP_WORK
+      jobs:
+        - job_id: job.run.sql
+          description: Charge le fichier £FILE_NAME en staging
+          parametres:
+            Plateforme: BQ
+            Requete: Clients_import_chargement_unitaire.gql
+
+==================================================
+10) Tables externes et chargement de données
+==================================================
+
+10.1 — Concept
+--------------------------------------------------
+
+  Une table externe permet de lire des fichiers (CSV, JSON, Parquet, etc.)
+  stockés dans un espace de stockage cloud SANS les copier dans la base.
+  Le moteur SQL interroge directement les fichiers via leur URI.
+
+  Cas d’usage typique dans JobMaster :
+    1. Les fichiers sont rapatriés par job.externe.import vers un bucket cloud.
+    2. Un job.run.sql crée ou référence une table externe pointant vers ces fichiers.
+    3. Un autre job.run.sql effectue un MERGE/INSERT depuis la table externe vers le SOCLE.
+
+10.2 — BigQuery (GQL)
+--------------------------------------------------
+
+  Stockage : Google Cloud Storage (GCS)
+  Format d’URI : gs://<bucket>/<chemin>/<fichier_ou_pattern>
+  Exemples :
+    gs://mon-projet-data/facturation/factures_*.csv
+    gs://mon-projet-data/clients/2026/*.json
+
+  Création d’une table externe BigQuery :
+
+    CREATE OR REPLACE EXTERNAL TABLE £BQ_TMP.ext_factures (
+      numero_facture  STRING,
+      montant_ht      NUMERIC,
+      montant_ttc     NUMERIC,
+      date_facture    DATE,
+      statut          STRING,
+      code_client     STRING
+    )
+    OPTIONS (
+      format = 'CSV',
+      uris = ['gs://mon-projet-data/facturation/*.csv'],
+      skip_leading_rows = 1
+    );
+
+  Chargement depuis table externe vers table native (staging) :
+
+    INSERT INTO £BQ_TMP.staging_factures
+    SELECT * FROM £BQ_TMP.ext_factures;
+
+  Chargement direct (LOAD DATA) sans table externe :
+
+    LOAD DATA OVERWRITE £BQ_TMP.staging_factures
+    FROM FILES (
+      format = 'CSV',
+      uris = ['gs://mon-projet-data/facturation/*.csv']
+    );
+
+  Options fréquentes :
+    - skip_leading_rows = 1        (ignorer l’en-tête CSV)
+    - field_delimiter = ';'        (séparateur de champs)
+    - allow_quoted_newlines = true  (sauts de ligne dans les champs)
+    - max_bad_records = 10          (tolérance d’erreurs)
+
+10.3 — Teradata (DQL)
+--------------------------------------------------
+
+  Stockage : serveur Teradata ou NOS (Native Object Store : S3, Azure Blob, GCS)
+  Format d’URI NOS :
+    /s3/<bucket>/<chemin>/          (Amazon S3)
+    /az/<container>/<chemin>/       (Azure Blob Storage)
+    /gs/<bucket>/<chemin>/          (Google Cloud Storage)
+
+  Création d’une table externe Teradata (NOS) :
+
+    CREATE FOREIGN TABLE £TD_TMP.ext_factures (
+      numero_facture  VARCHAR(50),
+      montant_ht      DECIMAL(15,2),
+      montant_ttc     DECIMAL(15,2),
+      date_facture    DATE,
+      statut          VARCHAR(30),
+      code_client     VARCHAR(50)
+    )
+    USING (
+      LOCATION('/s3/mon-bucket/facturation/')
+      STOREDAS('TEXTFILE')
+      HEADER('TRUE')
+    );
+
+  Chargement depuis table externe vers staging :
+
+    INSERT INTO £TD_TMP.staging_factures
+    SELECT * FROM £TD_TMP.ext_factures;
+
+10.4 — Types de données équivalences BQ / TD
+--------------------------------------------------
+
+  Donnée          BigQuery (GQL)       Teradata (DQL)
+  -----------------------------------------------------------
+  Texte           STRING               VARCHAR(n)
+  Entier          INT64                INTEGER / BIGINT
+  Décimal         NUMERIC              DECIMAL(p,s)
+  Flottant        FLOAT64              FLOAT
+  Date            DATE                 DATE
+  Horodatage      TIMESTAMP            TIMESTAMP
+  Booléen         BOOL                 BYTEINT (0/1)
+  Binaire         BYTES                BYTE(n) / VARBYTE(n)
+
+==================================================
+11) Comportement du moteur — rappel
+==================================================
+
+  - Exécution séquentielle stricte (ordre des jobs dans le YAML).
+  - Pour process.*, le bloc enfants "jobs:" est obligatoirement indenté et s’exécute :
+      • process.batch : UNE SEULE FOIS sur l’ensemble des fichiers (en masse).
+      • process.cyclique : à chaque itération, ou pour chaque fichier individuellement.
+  - Validation stricte : tous les paramètres obligatoires doivent être présents selon le job_id.
+  - Résolution automatique des .gql/.dql via le répertoire parent du YAML (<type>/sql/).
+  - job.run.create_view : aucun SQL requis, la vue est créée automatiquement par la plateforme.
+  - Les variables £ sont substituées dans les paramètres YAML et dans les fichiers SQL liés.
+
+==================================================
+12) Bonnes pratiques
+==================================================
+
+  - Indentation : 2 espaces, aucun onglet.
+  - Aérer les scripts : ligne vide après la description, après parametres_env, et entre chaque job.
+  - Utiliser « # » pour les commentaires YAML explicatifs.
+  - Noms explicites, stables et en français (id_script, fichiers YAML, fichiers SQL).
+  - Centraliser les variables (datasets, répertoires, tables) dans parametres_env.
+  - Scripts SQL atomiques (un objet / un métier par fichier) pour une meilleure traçabilité.
+  - Ne créer des vues (job.run.create_view) que sur des tables SOCLE.
+  - Privilégier les variables globales (£BQ_SOCLE, £DATE, etc.) plutôt que des valeurs en dur.
+  - Toujours préfixer les noms de fichiers et id_script par le domaine et le type.
+  - Pas de SQL orphelin dans installation/ : chaque SQL doit avoir un YAML correspondant.
+
+==================================================
+13) Glossaire
+==================================================
+
+  SOCLE            — Tables de référence consolidées, source de vérité du domaine
+                     (stockées dans £BQ_SOCLE ou £TD_SOCLE).
+  Staging          — Tables temporaires recevant les données brutes avant traitement
+                     (stockées dans £BQ_TMP ou £TD_TMP).
+  Table externe    — Table dont les données restent dans un stockage cloud (GCS, S3,
+                     Azure Blob). Le moteur SQL lit directement les fichiers via URI.
+                     BigQuery : CREATE EXTERNAL TABLE. Teradata : CREATE FOREIGN TABLE.
+  SAS              — Répertoire de travail intermédiaire utilisé par job.process.batch
+                     pour regrouper les fichiers avant traitement en masse.
+  Dataset          — Ensemble logique de tables sur une plateforme (BigQuery ou Teradata).
+  Workflow         — Enchaînement séquentiel de jobs défini dans un fichier YAML.
+  Domaine          — Périmètre métier (ex. Clients, Salesforce, Facturation).
+  Vue              — Objet en lecture seule créé automatiquement par job.run.create_view
+                     à partir d’une table SOCLE, placé dans £BQ_VUES ou £TD_VUES.
+  URI              — Adresse d’accès aux fichiers dans le cloud.
+                     GCS : gs://bucket/chemin  |  S3 : /s3/bucket/chemin
+                     Azure : /az/container/chemin
+  NOS              — Native Object Store (Teradata). Permet d’accéder à S3, Azure Blob
+                     ou GCS directement depuis Teradata via CREATE FOREIGN TABLE.
+
+==================================================
