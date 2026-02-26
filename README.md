@@ -43,7 +43,7 @@ JobMaster/
 
 ```bash
 # Cloner le dépôt
-git clone https://github.com/<votre-user>/JobMaster.git
+git clone https://github.com/adam-riffi/JobMaster.git
 cd JobMaster
 
 # Créer un environnement virtuel (recommandé)
