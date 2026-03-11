@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python generate_workspace.py)",
+      "Bash(pip install pyyaml -q)",
+      "Bash(python -c \":*)"
+    ]
+  }
+}

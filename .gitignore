@@ -6,6 +6,7 @@ __pycache__/
 
 # Environment
 .env
+.env.example
 .env.local
 .env.*.local
 
@@ -30,5 +31,8 @@ build/
 *.egg-info/
 *.egg
 
-# Dossier exemple généré
+# Dossiers générés
 Facturation/
+workspaces/
+docs/
+.claude/
