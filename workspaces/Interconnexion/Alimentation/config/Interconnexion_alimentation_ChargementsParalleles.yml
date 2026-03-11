@@ -1,0 +1,23 @@
+script:
+  id_script: Interconnexion_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique interconnexion
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.interconnexion
+    TBL_HISTO: £TD_HISTO.interconnexion_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE interconnexion
+          parametres:
+            Plateforme: TD
+            Requete: Interconnexion_alimentation_upsert_socle.dql
+
+        - job_id: job.run.sql
+          description: Insert historique interconnexion_histo
+          parametres:
+            Plateforme: TD
+            Requete: Interconnexion_alimentation_insert_histo.dql

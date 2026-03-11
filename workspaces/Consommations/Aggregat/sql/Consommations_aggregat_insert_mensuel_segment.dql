@@ -1,0 +1,13 @@
+-- Agrégation mensuelle cdr_aggr_journalier_client par segment (Teradata)
+
+INSERT INTO £TD_HISTO.cdr_aggr_journalier_client (
+  periode,
+  nb_enregistrements,
+  date_calcul
+)
+SELECT
+  TO_CHAR(CURRENT_DATE, 'YYYYMM') AS periode,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP AS date_calcul
+FROM £TD_SOCLE.cdr_voix t
+WHERE CAST(t.date_maj AS DATE) >= (CURRENT_DATE - EXTRACT(DAY FROM CURRENT_DATE) + 1);

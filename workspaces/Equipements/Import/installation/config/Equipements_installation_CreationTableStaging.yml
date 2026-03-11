@@ -1,0 +1,13 @@
+script:
+  id_script: Equipements_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_equipements (TD)
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_equipements
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_equipements sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Equipements_installation_creation_table_staging.dql

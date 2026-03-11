@@ -1,0 +1,18 @@
+script:
+  id_script: Ventes_Export_ExtractionCSV
+  description: Extraction du SOCLE ventes vers fichiers CSV datés
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.ventes
+    REP_EXPORT: C:\data\ventes\export
+    NOM_FICHIER: ventes_£DATE.csv
+
+  jobs:
+    - job_id: job.table.extraction
+      description: Extrait la table ventes en CSV
+      parametres:
+        Plateforme: BQ
+        TableSource: £TBL_SOCLE
+        Destination: £REP_EXPORT
+        NomFichier: £NOM_FICHIER
+        Format: csv

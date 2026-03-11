@@ -1,0 +1,26 @@
+script:
+  id_script: ServiceClient_Export_ExportAPI
+  description: Export du SOCLE interactions vers l'API partenaire via extraction JSON
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.interactions
+    REP_EXPORT: C:\data\service_client\export
+    API_DEST: https://api.crm.telecom/interactions/push
+    NOM_FICHIER: serviceclient_api_£DATETIME.json
+
+  jobs:
+    - job_id: job.table.extraction
+      description: Extrait le SOCLE interactions en JSON
+      parametres:
+        Plateforme: BQ
+        TableSource: £TBL_SOCLE
+        Destination: £REP_EXPORT
+        NomFichier: £NOM_FICHIER
+        Format: json
+
+    - job_id: job.externe.export
+      description: Pousse le JSON vers l'API partenaire
+      parametres:
+        Source: £REP_EXPORT
+        Cible: £API_DEST
+        Type: api

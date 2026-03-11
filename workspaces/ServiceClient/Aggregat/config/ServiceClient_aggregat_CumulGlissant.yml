@@ -1,0 +1,14 @@
+script:
+  id_script: ServiceClient_Aggregat_CumulGlissant
+  description: Calcul des cumuls glissants sur 12 mois pour le domaine serviceclient
+
+  parametres_env:
+    TBL_HISTO: £BQ_HISTO.interactions_histo
+    TBL_AGGR: £BQ_HISTO.interactions_aggr_nps_mensuel
+
+  jobs:
+    - job_id: job.run.sql
+      description: Recalcule le cumul glissant 12 mois
+      parametres:
+        Plateforme: BQ
+        Requete: ServiceClient_aggregat_cumul_glissant_12m.gql

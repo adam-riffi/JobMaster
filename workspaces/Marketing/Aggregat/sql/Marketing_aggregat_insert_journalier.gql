@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans campagnes_histo (BigQuery)
+INSERT INTO £BQ_HISTO.campagnes_histo (
+  id_campagne,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'marketing' AS id_campagne,
+  CURRENT_DATE() AS date_agregat,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.campagnes
+WHERE DATE(date_maj) = CURRENT_DATE();

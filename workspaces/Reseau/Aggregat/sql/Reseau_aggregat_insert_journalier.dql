@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans sites_reseau_histo (Teradata)
+INSERT INTO £TD_HISTO.sites_reseau_histo (
+  id_site,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'reseau',
+  CURRENT_DATE,
+  COUNT(*),
+  CURRENT_TIMESTAMP
+FROM £TD_SOCLE.sites_reseau
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

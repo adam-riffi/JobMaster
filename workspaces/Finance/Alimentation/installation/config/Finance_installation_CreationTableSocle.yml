@@ -1,0 +1,13 @@
+script:
+  id_script: Finance_Installation_CreationTableSocle
+  description: Création initiale de la table SOCLE comptes_financiers (BQ)
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.comptes_financiers
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table SOCLE comptes_financiers sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Finance_installation_creation_table_socle.gql

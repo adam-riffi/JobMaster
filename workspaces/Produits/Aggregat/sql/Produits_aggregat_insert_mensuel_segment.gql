@@ -1,0 +1,13 @@
+-- Agrégation mensuelle produits_aggr_ventes_mensuel par segment (BigQuery)
+
+INSERT INTO £BQ_HISTO.produits_aggr_ventes_mensuel (
+  periode,
+  nb_enregistrements,
+  date_calcul
+)
+SELECT
+  FORMAT_DATE('%Y%m', CURRENT_DATE()) AS periode,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_calcul
+FROM £BQ_SOCLE.produits t
+WHERE DATE(t.date_maj) >= DATE_TRUNC(CURRENT_DATE(), MONTH);

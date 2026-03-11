@@ -1,0 +1,8 @@
+-- Chargement des fichiers paiements dans la table staging BigQuery
+LOAD DATA OVERWRITE £BQ_TMP.staging_paiements
+FROM FILES (
+  format = 'CSV',
+  uris = ['gs://telecom-landing/paiements/*.csv'],
+  skip_leading_rows = 1,
+  field_delimiter = ';'
+);

@@ -1,0 +1,7 @@
+-- Insert historique journalier ventes_histo (BigQuery)
+INSERT INTO £BQ_HISTO.ventes_histo
+SELECT
+  s.id_vente, s.id_client, s.id_produit, s.id_commercial, s.date_vente, s.canal, s.montant, s.commission, s.statut,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.ventes s
+WHERE DATE(s.date_maj) = CURRENT_DATE();

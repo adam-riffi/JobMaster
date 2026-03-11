@@ -1,0 +1,14 @@
+script:
+  id_script: Paie_Aggregat_CumulGlissant
+  description: Calcul des cumuls glissants sur 12 mois pour le domaine paie
+
+  parametres_env:
+    TBL_HISTO: £TD_HISTO.paie_histo
+    TBL_AGGR: £TD_HISTO.paie_aggr_mensuel_direction
+
+  jobs:
+    - job_id: job.run.sql
+      description: Recalcule le cumul glissant 12 mois
+      parametres:
+        Plateforme: TD
+        Requete: Paie_aggregat_cumul_glissant_12m.dql

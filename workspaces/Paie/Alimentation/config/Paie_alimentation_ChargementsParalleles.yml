@@ -1,0 +1,23 @@
+script:
+  id_script: Paie_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique paie
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.paie_employes
+    TBL_HISTO: £TD_HISTO.paie_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE paie_employes
+          parametres:
+            Plateforme: TD
+            Requete: Paie_alimentation_upsert_socle.dql
+
+        - job_id: job.run.sql
+          description: Insert historique paie_histo
+          parametres:
+            Plateforme: TD
+            Requete: Paie_alimentation_insert_histo.dql

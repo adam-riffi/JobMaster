@@ -1,0 +1,7 @@
+-- Création de la table agrégat finance_aggr_mensuel_rubrique (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_HISTO.finance_aggr_mensuel_rubrique (
+  periode                  STRING         NOT NULL,
+  nb_enregistrements       INT64,
+  cumul_12m                INT64,
+  date_calcul              TIMESTAMP
+);

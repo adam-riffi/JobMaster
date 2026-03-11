@@ -1,0 +1,7 @@
+-- Insert historique journalier equipements_histo (Teradata)
+INSERT INTO £TD_HISTO.equipements_histo
+SELECT
+  s.id_equipement, s.id_client, s.type_equipement, s.marque, s.modele, s.imei, s.date_installation, s.statut, s.version_firmware,
+  CURRENT_TIMESTAMP AS date_maj
+FROM £TD_SOCLE.equipements s
+WHERE CAST(s.date_maj AS DATE) = CURRENT_DATE;

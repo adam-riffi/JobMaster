@@ -1,0 +1,13 @@
+script:
+  id_script: Contrats_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_contrats (BQ)
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_contrats
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_contrats sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Contrats_installation_creation_table_staging.gql

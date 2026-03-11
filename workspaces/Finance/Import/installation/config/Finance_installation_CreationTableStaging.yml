@@ -1,0 +1,13 @@
+script:
+  id_script: Finance_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_finance (BQ)
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_finance
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_finance sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Finance_installation_creation_table_staging.gql

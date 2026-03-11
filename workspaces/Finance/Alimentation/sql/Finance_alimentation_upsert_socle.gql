@@ -1,0 +1,18 @@
+-- MERGE staging → SOCLE comptes_financiers (BigQuery)
+MERGE £BQ_SOCLE.comptes_financiers AS cible
+USING £BQ_TMP.staging_finance AS staging
+ON cible.id_ecriture = staging.id_ecriture
+WHEN MATCHED THEN
+  UPDATE SET
+    cible.periode = staging.periode,
+    cible.rubrique = staging.rubrique,
+    cible.sous_rubrique = staging.sous_rubrique,
+    cible.montant_debit = staging.montant_debit,
+    cible.montant_credit = staging.montant_credit,
+    cible.solde = staging.solde,
+    cible.devise = staging.devise,
+    cible.date_comptable = staging.date_comptable,
+    cible.date_maj = CURRENT_TIMESTAMP()
+WHEN NOT MATCHED THEN
+  INSERT (id_ecriture, periode, rubrique, sous_rubrique, montant_debit, montant_credit, solde, devise, date_comptable, date_maj)
+  VALUES (staging.id_ecriture, staging.periode, staging.rubrique, staging.sous_rubrique, staging.montant_debit, staging.montant_credit, staging.solde, staging.devise, staging.date_comptable, CURRENT_TIMESTAMP());

@@ -1,0 +1,3 @@
+-- Suppression des agrégats du mois courant avant recalcul (Teradata)
+DELETE FROM £TD_HISTO.reseau_aggr_kpi_journalier
+WHERE TO_CHAR(date_agregat, 'YYYYMM') = TO_CHAR(CURRENT_DATE, 'YYYYMM');

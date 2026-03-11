@@ -1,0 +1,33 @@
+script:
+  id_script: Contrats_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE contrats depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_contrats
+    TBL_SOCLE: £BQ_SOCLE.contrats
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: BQ
+        Requete: Contrats_alimentation_check_staging.gql
+        Variable: FLAG_STAGING_CONTRATS
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_CONTRATS
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE contrats
+          parametres:
+            Plateforme: BQ
+            Requete: Contrats_alimentation_upsert_socle.gql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier contrats
+          parametres:
+            Plateforme: BQ
+            Table: £TBL_SOCLE

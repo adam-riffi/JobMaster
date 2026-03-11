@@ -1,0 +1,23 @@
+script:
+  id_script: Reporting_Alimentation_EnrichissementTransverse
+  description: Enrichissement du SOCLE kpi_global avec données cross-domaine via transfert
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.kpi_global
+    TBL_TMP_ENRICHI: £BQ_TMP.kpi_global_enrichi
+
+  jobs:
+    - job_id: job.run.sql
+      description: Prépare la table enrichie en croisant avec données transverses
+      parametres:
+        Plateforme: BQ
+        Requete: Reporting_alimentation_enrichissement_transverse.gql
+
+    - job_id: job.run.transfert
+      description: Transfère les données enrichies vers la plateforme cible
+      parametres:
+        PlateformeSource: BQ
+        TableSource: £TBL_TMP_ENRICHI
+        PlateformeCible: TD
+        TableCible: £TD_TMP.kpi_global_enrichi_sync
+        Mode: FULL

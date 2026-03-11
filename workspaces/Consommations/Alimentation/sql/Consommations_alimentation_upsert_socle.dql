@@ -1,0 +1,16 @@
+-- MERGE staging → SOCLE cdr_voix (Teradata)
+MERGE £TD_SOCLE.cdr_voix AS cible
+USING £TD_TMP.staging_cdr_voix AS staging
+ON cible.id_cdr = staging.id_cdr
+WHEN MATCHED THEN UPDATE SET
+    cible.id_client = staging.id_client,
+    cible.date_appel = staging.date_appel,
+    cible.heure_appel = staging.heure_appel,
+    cible.duree_secondes = staging.duree_secondes,
+    cible.type_trafic = staging.type_trafic,
+    cible.zone = staging.zone,
+    cible.montant = staging.montant,
+    cible.operateur_transit = staging.operateur_transit,
+    cible.date_maj = CURRENT_TIMESTAMP
+WHEN NOT MATCHED THEN INSERT (id_cdr, id_client, date_appel, heure_appel, duree_secondes, type_trafic, zone, montant, operateur_transit, date_maj)
+  VALUES (staging.id_cdr, staging.id_client, staging.date_appel, staging.heure_appel, staging.duree_secondes, staging.type_trafic, staging.zone, staging.montant, staging.operateur_transit, CURRENT_TIMESTAMP);

@@ -1,0 +1,14 @@
+script:
+  id_script: Reporting_Aggregat_CumulGlissant
+  description: Calcul des cumuls glissants sur 12 mois pour le domaine reporting
+
+  parametres_env:
+    TBL_HISTO: £BQ_HISTO.kpi_global_histo
+    TBL_AGGR: £BQ_HISTO.reporting_aggr_mensuel_direction
+
+  jobs:
+    - job_id: job.run.sql
+      description: Recalcule le cumul glissant 12 mois
+      parametres:
+        Plateforme: BQ
+        Requete: Reporting_aggregat_cumul_glissant_12m.gql

@@ -1,0 +1,18 @@
+-- MERGE staging → SOCLE interactions (BigQuery)
+MERGE £BQ_SOCLE.interactions AS cible
+USING £BQ_TMP.staging_interactions AS staging
+ON cible.id_interaction = staging.id_interaction
+WHEN MATCHED THEN
+  UPDATE SET
+    cible.id_client = staging.id_client,
+    cible.date_interaction = staging.date_interaction,
+    cible.canal_contact = staging.canal_contact,
+    cible.motif = staging.motif,
+    cible.statut = staging.statut,
+    cible.duree_traitement = staging.duree_traitement,
+    cible.note_satisfaction = staging.note_satisfaction,
+    cible.agent_id = staging.agent_id,
+    cible.date_maj = CURRENT_TIMESTAMP()
+WHEN NOT MATCHED THEN
+  INSERT (id_interaction, id_client, date_interaction, canal_contact, motif, statut, duree_traitement, note_satisfaction, agent_id, date_maj)
+  VALUES (staging.id_interaction, staging.id_client, staging.date_interaction, staging.canal_contact, staging.motif, staging.statut, staging.duree_traitement, staging.note_satisfaction, staging.agent_id, CURRENT_TIMESTAMP());

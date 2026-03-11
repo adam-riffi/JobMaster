@@ -1,0 +1,14 @@
+-- Création de la table staging staging_portages (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_TMP.staging_portages (
+  id_portage                          VARCHAR(36) NOT NULL,
+  msisdn                              VARCHAR(15),
+  operateur_source                    VARCHAR(50),
+  operateur_cible                     VARCHAR(50),
+  date_demande                        DATE,
+  date_portage                        DATE,
+  statut                              VARCHAR(20),
+  motif_rejet                         VARCHAR(200),
+  type_portage                        VARCHAR(20),
+  date_maj                            TIMESTAMP
+)
+PRIMARY INDEX (id_portage);

@@ -1,0 +1,12 @@
+-- Création de la table staging staging_kpi_global (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_TMP.staging_kpi_global (
+  id_kpi                              STRING NOT NULL
+  periode                             STRING
+  domaine                             STRING
+  indicateur                          STRING
+  valeur                              NUMERIC
+  unite                               STRING
+  date_calcul                         TIMESTAMP
+  date_maj                            TIMESTAMP
+)
+OPTIONS (expiration_timestamp = NULL);

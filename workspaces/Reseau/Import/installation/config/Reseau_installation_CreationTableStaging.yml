@@ -1,0 +1,13 @@
+script:
+  id_script: Reseau_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_sites_reseau (TD)
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_sites_reseau
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_sites_reseau sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Reseau_installation_creation_table_staging.dql

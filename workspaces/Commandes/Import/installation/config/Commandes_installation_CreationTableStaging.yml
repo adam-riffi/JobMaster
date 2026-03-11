@@ -1,0 +1,13 @@
+script:
+  id_script: Commandes_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_commandes (BQ)
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_commandes
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_commandes sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Commandes_installation_creation_table_staging.gql

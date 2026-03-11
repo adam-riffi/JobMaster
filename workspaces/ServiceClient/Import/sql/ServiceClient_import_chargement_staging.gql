@@ -1,0 +1,8 @@
+-- Chargement des fichiers serviceclient dans la table staging BigQuery
+LOAD DATA OVERWRITE £BQ_TMP.staging_interactions
+FROM FILES (
+  format = 'CSV',
+  uris = ['gs://telecom-landing/serviceclient/*.csv'],
+  skip_leading_rows = 1,
+  field_delimiter = ';'
+);

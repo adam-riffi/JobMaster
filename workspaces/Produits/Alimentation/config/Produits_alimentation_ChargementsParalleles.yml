@@ -1,0 +1,23 @@
+script:
+  id_script: Produits_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique produits
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.produits
+    TBL_HISTO: £BQ_HISTO.produits_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE produits
+          parametres:
+            Plateforme: BQ
+            Requete: Produits_alimentation_upsert_socle.gql
+
+        - job_id: job.run.sql
+          description: Insert historique produits_histo
+          parametres:
+            Plateforme: BQ
+            Requete: Produits_alimentation_insert_histo.gql

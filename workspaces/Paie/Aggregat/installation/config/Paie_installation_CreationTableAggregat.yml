@@ -1,0 +1,13 @@
+script:
+  id_script: Paie_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat paie_aggr_mensuel_direction (TD)
+
+  parametres_env:
+    TBL_AGGR: £TD_HISTO.paie_aggr_mensuel_direction
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat paie_aggr_mensuel_direction sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Paie_installation_creation_table_aggregat.dql

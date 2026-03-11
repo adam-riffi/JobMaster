@@ -1,0 +1,13 @@
+script:
+  id_script: Reseau_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat reseau_aggr_kpi_journalier (TD)
+
+  parametres_env:
+    TBL_AGGR: £TD_HISTO.reseau_aggr_kpi_journalier
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat reseau_aggr_kpi_journalier sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Reseau_installation_creation_table_aggregat.dql

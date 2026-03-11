@@ -1,0 +1,25 @@
+-- Chargement des fichiers portabilite dans la table staging Teradata
+INSERT INTO £TD_TMP.staging_portages (
+  id_portage,
+  msisdn,
+  operateur_source,
+  operateur_cible,
+  date_demande,
+  date_portage,
+  statut,
+  motif_rejet,
+  type_portage,
+  date_maj
+)
+SELECT
+  id_portage,
+  msisdn,
+  operateur_source,
+  operateur_cible,
+  date_demande,
+  date_portage,
+  statut,
+  motif_rejet,
+  type_portage,
+  date_maj
+FROM £TD_TMP.ext_staging_portages;

@@ -1,0 +1,18 @@
+-- MERGE staging → SOCLE campagnes (BigQuery)
+MERGE £BQ_SOCLE.campagnes AS cible
+USING £BQ_TMP.staging_campagnes AS staging
+ON cible.id_campagne = staging.id_campagne
+WHEN MATCHED THEN
+  UPDATE SET
+    cible.code_segment = staging.code_segment,
+    cible.libelle = staging.libelle,
+    cible.canal = staging.canal,
+    cible.date_debut = staging.date_debut,
+    cible.date_fin = staging.date_fin,
+    cible.budget = staging.budget,
+    cible.nb_cibles = staging.nb_cibles,
+    cible.taux_conversion = staging.taux_conversion,
+    cible.date_maj = CURRENT_TIMESTAMP()
+WHEN NOT MATCHED THEN
+  INSERT (id_campagne, code_segment, libelle, canal, date_debut, date_fin, budget, nb_cibles, taux_conversion, date_maj)
+  VALUES (staging.id_campagne, staging.code_segment, staging.libelle, staging.canal, staging.date_debut, staging.date_fin, staging.budget, staging.nb_cibles, staging.taux_conversion, CURRENT_TIMESTAMP());

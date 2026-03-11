@@ -1,0 +1,23 @@
+script:
+  id_script: Recouvrement_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique recouvrement
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.creances
+    TBL_HISTO: £TD_HISTO.creances_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE creances
+          parametres:
+            Plateforme: TD
+            Requete: Recouvrement_alimentation_upsert_socle.dql
+
+        - job_id: job.run.sql
+          description: Insert historique creances_histo
+          parametres:
+            Plateforme: TD
+            Requete: Recouvrement_alimentation_insert_histo.dql

@@ -1,0 +1,13 @@
+script:
+  id_script: Recouvrement_Installation_CreationTableSocle
+  description: Création initiale de la table SOCLE creances (TD)
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.creances
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table SOCLE creances sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Recouvrement_installation_creation_table_socle.dql

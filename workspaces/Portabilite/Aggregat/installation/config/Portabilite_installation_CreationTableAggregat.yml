@@ -1,0 +1,13 @@
+script:
+  id_script: Portabilite_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat portabilite_aggr_mensuel_operateur (TD)
+
+  parametres_env:
+    TBL_AGGR: £TD_HISTO.portabilite_aggr_mensuel_operateur
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat portabilite_aggr_mensuel_operateur sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Portabilite_installation_creation_table_aggregat.dql

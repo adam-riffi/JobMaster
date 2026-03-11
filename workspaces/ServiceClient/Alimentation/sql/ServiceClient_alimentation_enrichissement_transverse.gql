@@ -1,0 +1,12 @@
+-- Enrichissement transverse interactions (BigQuery)
+-- Ce flux est TRANSVERSE : il emprunte des tables d'autres domaines.
+-- Référence cross-domaine : £BQ_SOCLE.clients (domaine Clients)
+LEFT JOIN £BQ_SOCLE.clients ext_clients ON t.id_interaction = ext_clients.id_interaction
+-- Référence cross-domaine : £BQ_SOCLE.contrats (domaine Contrats)
+LEFT JOIN £BQ_SOCLE.contrats ext_contrats ON t.id_interaction = ext_contrats.id_interaction
+-- Référence cross-domaine : £TD_SOCLE.incidents (domaine Incidents)
+LEFT JOIN £TD_SOCLE.incidents ext_incidents ON t.id_interaction = ext_incidents.id_interaction
+INSERT INTO £BQ_TMP.interactions_enrichi
+SELECT
+  t.*
+FROM £BQ_SOCLE.interactions t;

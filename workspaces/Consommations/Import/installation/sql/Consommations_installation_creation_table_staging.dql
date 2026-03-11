@@ -1,0 +1,14 @@
+-- Création de la table staging staging_cdr_voix (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_TMP.staging_cdr_voix (
+  id_cdr                              VARCHAR(36) NOT NULL,
+  id_client                           VARCHAR(20),
+  date_appel                          DATE,
+  heure_appel                         TIME,
+  duree_secondes                      INTEGER,
+  type_trafic                         VARCHAR(10),
+  zone                                VARCHAR(50),
+  montant                             DECIMAL(10,4),
+  operateur_transit                   VARCHAR(50),
+  date_maj                            TIMESTAMP
+)
+PRIMARY INDEX (id_cdr);

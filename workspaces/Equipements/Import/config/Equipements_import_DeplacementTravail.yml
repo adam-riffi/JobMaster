@@ -1,0 +1,17 @@
+script:
+  id_script: Equipements_Import_DeplacementTravail
+  description: Déplacement des fichiers equipements de la zone d'entrée vers la zone de travail
+
+  parametres_env:
+    REP_IN: C:\data\equipements\in
+    REP_WORK: C:\data\equipements\work
+    MASQUE_EQUIPEMENTS: "^equipements_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.manipulation
+      description: Déplace les fichiers vers la zone de travail
+      parametres:
+        Source: £REP_IN
+        Cible: £REP_WORK
+        Masque: £MASQUE_EQUIPEMENTS
+        Mode: deplacement

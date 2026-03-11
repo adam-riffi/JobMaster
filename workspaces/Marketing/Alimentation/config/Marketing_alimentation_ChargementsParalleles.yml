@@ -1,0 +1,23 @@
+script:
+  id_script: Marketing_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique marketing
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.campagnes
+    TBL_HISTO: £BQ_HISTO.campagnes_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE campagnes
+          parametres:
+            Plateforme: BQ
+            Requete: Marketing_alimentation_upsert_socle.gql
+
+        - job_id: job.run.sql
+          description: Insert historique campagnes_histo
+          parametres:
+            Plateforme: BQ
+            Requete: Marketing_alimentation_insert_histo.gql

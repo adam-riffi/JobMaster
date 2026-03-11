@@ -1,0 +1,16 @@
+-- MERGE staging → SOCLE equipements (Teradata)
+MERGE £TD_SOCLE.equipements AS cible
+USING £TD_TMP.staging_equipements AS staging
+ON cible.id_equipement = staging.id_equipement
+WHEN MATCHED THEN UPDATE SET
+    cible.id_client = staging.id_client,
+    cible.type_equipement = staging.type_equipement,
+    cible.marque = staging.marque,
+    cible.modele = staging.modele,
+    cible.imei = staging.imei,
+    cible.date_installation = staging.date_installation,
+    cible.statut = staging.statut,
+    cible.version_firmware = staging.version_firmware,
+    cible.date_maj = CURRENT_TIMESTAMP
+WHEN NOT MATCHED THEN INSERT (id_equipement, id_client, type_equipement, marque, modele, imei, date_installation, statut, version_firmware, date_maj)
+  VALUES (staging.id_equipement, staging.id_client, staging.type_equipement, staging.marque, staging.modele, staging.imei, staging.date_installation, staging.statut, staging.version_firmware, CURRENT_TIMESTAMP);

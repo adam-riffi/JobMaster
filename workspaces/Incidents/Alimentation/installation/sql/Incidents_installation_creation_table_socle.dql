@@ -1,0 +1,15 @@
+-- Création de la table SOCLE incidents (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_SOCLE.incidents (
+  id_incident                         VARCHAR(36) NOT NULL,
+  id_site                             VARCHAR(20),
+  date_debut                          DATE,
+  heure_debut                         TIME,
+  date_fin                            DATE,
+  severite                            VARCHAR(10),
+  type_incident                       VARCHAR(50),
+  zones_impactees                     VARCHAR(500),
+  nb_clients_touches                  INTEGER,
+  statut                              VARCHAR(20),
+  date_maj                            TIMESTAMP
+)
+PRIMARY INDEX (id_incident);

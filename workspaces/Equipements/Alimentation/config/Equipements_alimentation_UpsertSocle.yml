@@ -1,0 +1,33 @@
+script:
+  id_script: Equipements_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE equipements depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_equipements
+    TBL_SOCLE: £TD_SOCLE.equipements
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: TD
+        Requete: Equipements_alimentation_check_staging.dql
+        Variable: FLAG_STAGING_EQUIPEMENTS
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_EQUIPEMENTS
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE equipements
+          parametres:
+            Plateforme: TD
+            Requete: Equipements_alimentation_upsert_socle.dql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier equipements
+          parametres:
+            Plateforme: TD
+            Table: £TBL_SOCLE

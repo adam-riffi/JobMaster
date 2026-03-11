@@ -1,0 +1,15 @@
+script:
+  id_script: Clients_Import_RapatriementSFTP
+  description: Rapatriement des fichiers clients depuis le SFTP source vers la zone d'entrée
+
+  parametres_env:
+    SFTP_SOURCE: sftp://crm-partner/clients/in
+    REP_IN: C:\data\clients\in
+
+  jobs:
+    - job_id: job.externe.import
+      description: Récupère les fichiers clients depuis le SFTP
+      parametres:
+        Source: £SFTP_SOURCE
+        Cible: £REP_IN
+        Type: sftp

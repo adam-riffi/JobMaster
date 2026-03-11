@@ -1,0 +1,20 @@
+script:
+  id_script: Finance_Import_ControleCSV
+  description: Validation structurelle des fichiers finance avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\finance\work
+    REP_ERR: C:\data\finance\erreur
+    MASQUE_FINANCE: "^ecritures_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers finance
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_FINANCE
+        Colonnes: "id_ecriture,periode,rubrique,sous_rubrique,montant_debit,montant_credit"
+        Separateur: ";"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

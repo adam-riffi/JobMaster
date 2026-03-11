@@ -1,0 +1,13 @@
+script:
+  id_script: Reseau_Installation_CreationTableSocle
+  description: Création initiale de la table SOCLE sites_reseau (TD)
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.sites_reseau
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table SOCLE sites_reseau sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Reseau_installation_creation_table_socle.dql

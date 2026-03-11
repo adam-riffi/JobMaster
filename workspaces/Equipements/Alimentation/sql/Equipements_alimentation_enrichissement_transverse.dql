@@ -1,0 +1,8 @@
+-- Enrichissement transverse equipements (Teradata)
+-- Ce flux est TRANSVERSE : il emprunte des tables d'autres domaines.
+-- Référence cross-domaine : £BQ_SOCLE.clients (domaine Clients)
+LEFT JOIN £BQ_SOCLE.clients ext_clients ON t.id_equipement = ext_clients.id_equipement
+INSERT INTO £TD_TMP.equipements_enrichi
+SELECT
+  t.*
+FROM £TD_SOCLE.equipements t;

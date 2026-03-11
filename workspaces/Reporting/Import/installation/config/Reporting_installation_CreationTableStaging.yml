@@ -1,0 +1,13 @@
+script:
+  id_script: Reporting_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_kpi_global (BQ)
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_kpi_global
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_kpi_global sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Reporting_installation_creation_table_staging.gql

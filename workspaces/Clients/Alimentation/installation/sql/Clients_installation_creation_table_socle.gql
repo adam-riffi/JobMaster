@@ -1,0 +1,12 @@
+-- Création de la table SOCLE clients (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_SOCLE.clients (
+  id_client                           STRING NOT NULL
+  nom                                 STRING
+  prenom                              STRING
+  email                               STRING
+  telephone                           STRING
+  date_naissance                      DATE
+  segment                             STRING
+  statut                              STRING
+  date_maj                            TIMESTAMP
+);

@@ -1,0 +1,8 @@
+-- Chargement des fichiers reporting dans la table staging BigQuery
+LOAD DATA OVERWRITE £BQ_TMP.staging_kpi_global
+FROM FILES (
+  format = 'CSV',
+  uris = ['gs://telecom-landing/reporting/*.csv'],
+  skip_leading_rows = 1,
+  field_delimiter = ';'
+);

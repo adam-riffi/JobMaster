@@ -1,0 +1,7 @@
+-- Insert historique journalier contrats_histo (BigQuery)
+INSERT INTO £BQ_HISTO.contrats_histo
+SELECT
+  s.id_contrat, s.id_client, s.type_offre, s.technologie, s.date_debut, s.date_fin, s.statut, s.montant_mensuel,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.contrats s
+WHERE DATE(s.date_maj) = CURRENT_DATE();

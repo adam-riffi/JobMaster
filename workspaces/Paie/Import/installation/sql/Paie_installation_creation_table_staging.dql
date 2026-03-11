@@ -1,0 +1,14 @@
+-- Création de la table staging staging_paie (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_TMP.staging_paie (
+  id_paie                             VARCHAR(36) NOT NULL,
+  id_employe                          VARCHAR(20),
+  periode                             VARCHAR(7),
+  salaire_brut                        DECIMAL(10,2),
+  cotisations_patronales              DECIMAL(10,2),
+  cotisations_salariales              DECIMAL(10,2),
+  salaire_net                         DECIMAL(10,2),
+  mode_paiement                       VARCHAR(20),
+  date_virement                       DATE,
+  date_maj                            TIMESTAMP
+)
+PRIMARY INDEX (id_paie);

@@ -1,0 +1,26 @@
+script:
+  id_script: Consommations_Import_Decompression
+  description: Décompression des fichiers consommations compressés avant traitement
+
+  parametres_env:
+    REP_IN: C:\data\consommations\in
+    REP_WORK: C:\data\consommations\work
+    MASQUE_GZ: "^cdr_voix_\d{8}\.csv\.gz$"
+    MASQUE_CSV: "^cdr_voix_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.decompression
+      description: Décompresse les archives consommations
+      parametres:
+        Source: £REP_IN
+        Cible: £REP_WORK
+        Masque: £MASQUE_GZ
+        Format: gzip
+
+    - job_id: job.fichier.manipulation
+      description: Déplace les CSV décompressés vers la zone de travail
+      parametres:
+        Source: £REP_IN
+        Cible: £REP_WORK
+        Masque: £MASQUE_CSV
+        Mode: deplacement

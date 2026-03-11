@@ -1,0 +1,14 @@
+script:
+  id_script: Fraude_Aggregat_CumulGlissant
+  description: Calcul des cumuls glissants sur 12 mois pour le domaine fraude
+
+  parametres_env:
+    TBL_HISTO: £TD_HISTO.alertes_fraude_histo
+    TBL_AGGR: £TD_HISTO.fraude_aggr_mensuel_type
+
+  jobs:
+    - job_id: job.run.sql
+      description: Recalcule le cumul glissant 12 mois
+      parametres:
+        Plateforme: TD
+        Requete: Fraude_aggregat_cumul_glissant_12m.dql

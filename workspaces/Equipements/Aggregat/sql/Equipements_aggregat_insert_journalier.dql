@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans equipements_histo (Teradata)
+INSERT INTO £TD_HISTO.equipements_histo (
+  id_equipement,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'equipements',
+  CURRENT_DATE,
+  COUNT(*),
+  CURRENT_TIMESTAMP
+FROM £TD_SOCLE.equipements
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

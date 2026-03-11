@@ -1,0 +1,4 @@
+-- Vérification que le SOCLE sites_reseau a été mis à jour aujourd'hui
+SELECT CASE WHEN COUNT(*) > 0 THEN 'OUI' ELSE 'NON' END
+FROM £TD_SOCLE.sites_reseau
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

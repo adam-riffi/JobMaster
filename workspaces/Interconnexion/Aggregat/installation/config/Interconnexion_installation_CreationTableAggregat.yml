@@ -1,0 +1,13 @@
+script:
+  id_script: Interconnexion_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat interconnexion_aggr_mensuel_operateur (TD)
+
+  parametres_env:
+    TBL_AGGR: £TD_HISTO.interconnexion_aggr_mensuel_operateur
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat interconnexion_aggr_mensuel_operateur sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Interconnexion_installation_creation_table_aggregat.dql

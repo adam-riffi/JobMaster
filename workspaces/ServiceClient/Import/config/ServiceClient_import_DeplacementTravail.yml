@@ -1,0 +1,17 @@
+script:
+  id_script: ServiceClient_Import_DeplacementTravail
+  description: Déplacement des fichiers serviceclient de la zone d'entrée vers la zone de travail
+
+  parametres_env:
+    REP_IN: C:\data\service_client\in
+    REP_WORK: C:\data\service_client\work
+    MASQUE_SERVICECLIENT: "^interactions_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.manipulation
+      description: Déplace les fichiers vers la zone de travail
+      parametres:
+        Source: £REP_IN
+        Cible: £REP_WORK
+        Masque: £MASQUE_SERVICECLIENT
+        Mode: deplacement

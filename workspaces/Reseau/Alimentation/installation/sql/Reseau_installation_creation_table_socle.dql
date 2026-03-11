@@ -1,0 +1,14 @@
+-- Création de la table SOCLE sites_reseau (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_SOCLE.sites_reseau (
+  id_site                             VARCHAR(20) NOT NULL,
+  code_site                           VARCHAR(20),
+  technologie                         VARCHAR(10),
+  region                              VARCHAR(50),
+  latitude                            DECIMAL(10,6),
+  longitude                           DECIMAL(10,6),
+  capacite_max_mo                     DECIMAL(12,2),
+  trafic_actuel_mo                    DECIMAL(12,2),
+  statut                              VARCHAR(20),
+  date_maj                            TIMESTAMP
+)
+PRIMARY INDEX (id_site);

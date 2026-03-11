@@ -1,0 +1,33 @@
+script:
+  id_script: Fraude_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE alertes_fraude depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_alertes_fraude
+    TBL_SOCLE: £TD_SOCLE.alertes_fraude
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: TD
+        Requete: Fraude_alimentation_check_staging.dql
+        Variable: FLAG_STAGING_FRAUDE
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_FRAUDE
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE alertes_fraude
+          parametres:
+            Plateforme: TD
+            Requete: Fraude_alimentation_upsert_socle.dql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier alertes_fraude
+          parametres:
+            Plateforme: TD
+            Table: £TBL_SOCLE

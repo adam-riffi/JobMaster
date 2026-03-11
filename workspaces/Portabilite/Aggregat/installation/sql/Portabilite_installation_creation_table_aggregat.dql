@@ -1,0 +1,8 @@
+-- Création de la table agrégat portabilite_aggr_mensuel_operateur (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_HISTO.portabilite_aggr_mensuel_operateur (
+  periode                  VARCHAR(7)     NOT NULL,
+  nb_enregistrements       INTEGER,
+  cumul_12m                INTEGER,
+  date_calcul              TIMESTAMP
+)
+PRIMARY INDEX (periode);

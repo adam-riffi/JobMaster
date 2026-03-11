@@ -1,0 +1,33 @@
+script:
+  id_script: Reseau_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE sites_reseau depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_sites_reseau
+    TBL_SOCLE: £TD_SOCLE.sites_reseau
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: TD
+        Requete: Reseau_alimentation_check_staging.dql
+        Variable: FLAG_STAGING_RESEAU
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_RESEAU
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE sites_reseau
+          parametres:
+            Plateforme: TD
+            Requete: Reseau_alimentation_upsert_socle.dql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier sites_reseau
+          parametres:
+            Plateforme: TD
+            Table: £TBL_SOCLE

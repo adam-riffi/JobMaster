@@ -1,0 +1,13 @@
+-- Création de la table staging staging_contrats (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_TMP.staging_contrats (
+  id_contrat                          STRING NOT NULL
+  id_client                           STRING
+  type_offre                          STRING
+  technologie                         STRING
+  date_debut                          DATE
+  date_fin                            DATE
+  statut                              STRING
+  montant_mensuel                     NUMERIC
+  date_maj                            TIMESTAMP
+)
+OPTIONS (expiration_timestamp = NULL);

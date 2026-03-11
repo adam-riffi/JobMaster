@@ -1,0 +1,33 @@
+script:
+  id_script: Paiements_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE paiements depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_paiements
+    TBL_SOCLE: £BQ_SOCLE.paiements
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: BQ
+        Requete: Paiements_alimentation_check_staging.gql
+        Variable: FLAG_STAGING_PAIEMENTS
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_PAIEMENTS
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE paiements
+          parametres:
+            Plateforme: BQ
+            Requete: Paiements_alimentation_upsert_socle.gql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier paiements
+          parametres:
+            Plateforme: BQ
+            Table: £TBL_SOCLE

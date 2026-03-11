@@ -1,0 +1,20 @@
+script:
+  id_script: Ventes_Import_ControleCSV
+  description: Validation structurelle des fichiers ventes avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\ventes\work
+    REP_ERR: C:\data\ventes\erreur
+    MASQUE_VENTES: "^ventes_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers ventes
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_VENTES
+        Colonnes: "id_vente,id_client,id_produit,id_commercial,date_vente,canal"
+        Separateur: ";"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

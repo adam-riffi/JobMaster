@@ -1,0 +1,21 @@
+-- Agrégation mensuelle interactions_aggr_nps_mensuel par segment (BigQuery)
+
+-- Flux transverse : jointures avec tables d'autres domaines
+-- Référence cross-domaine : £BQ_SOCLE.clients (domaine Clients)
+LEFT JOIN £BQ_SOCLE.clients ext_clients ON t.id_interaction = ext_clients.id_interaction
+-- Référence cross-domaine : £BQ_SOCLE.contrats (domaine Contrats)
+LEFT JOIN £BQ_SOCLE.contrats ext_contrats ON t.id_interaction = ext_contrats.id_interaction
+-- Référence cross-domaine : £TD_SOCLE.incidents (domaine Incidents)
+LEFT JOIN £TD_SOCLE.incidents ext_incidents ON t.id_interaction = ext_incidents.id_interaction
+
+INSERT INTO £BQ_HISTO.interactions_aggr_nps_mensuel (
+  periode,
+  nb_enregistrements,
+  date_calcul
+)
+SELECT
+  FORMAT_DATE('%Y%m', CURRENT_DATE()) AS periode,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_calcul
+FROM £BQ_SOCLE.interactions t
+WHERE DATE(t.date_maj) >= DATE_TRUNC(CURRENT_DATE(), MONTH);

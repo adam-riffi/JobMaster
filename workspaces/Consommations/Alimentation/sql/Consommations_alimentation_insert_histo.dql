@@ -1,0 +1,7 @@
+-- Insert historique journalier cdr_voix_histo (Teradata)
+INSERT INTO £TD_HISTO.cdr_voix_histo
+SELECT
+  s.id_cdr, s.id_client, s.date_appel, s.heure_appel, s.duree_secondes, s.type_trafic, s.zone, s.montant, s.operateur_transit,
+  CURRENT_TIMESTAMP AS date_maj
+FROM £TD_SOCLE.cdr_voix s
+WHERE CAST(s.date_maj AS DATE) = CURRENT_DATE;

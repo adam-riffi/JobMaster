@@ -1,0 +1,28 @@
+script:
+  id_script: Reseau_Aggregat_JournalierSocle
+  description: Agrégation journalière du SOCLE sites_reseau vers l'historique
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.sites_reseau
+    TBL_HISTO: £TD_HISTO.sites_reseau_histo
+    PERIODE: £DATE
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que le SOCLE a été alimenté aujourd'hui
+      parametres:
+        Plateforme: TD
+        Requete: Reseau_aggregat_check_socle_jour.dql
+        Variable: FLAG_SOCLE_RESEAU
+
+    - job_id: job.conditionnelle.si
+      description: Agrège uniquement si le SOCLE est à jour
+      parametres:
+        Variable: FLAG_SOCLE_RESEAU
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: Insère les données du jour dans l'historique
+          parametres:
+            Plateforme: TD
+            Requete: Reseau_aggregat_insert_journalier.dql

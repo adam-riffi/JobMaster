@@ -1,0 +1,20 @@
+script:
+  id_script: Fraude_Import_ControleCSV
+  description: Validation structurelle des fichiers fraude avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\fraude\work
+    REP_ERR: C:\data\fraude\erreur
+    MASQUE_FRAUDE: "^fraude_alertes_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers fraude
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_FRAUDE
+        Colonnes: "id_alerte,id_client,date_detection,type_fraude,score_risque,montant_suspect"
+        Separateur: "|"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

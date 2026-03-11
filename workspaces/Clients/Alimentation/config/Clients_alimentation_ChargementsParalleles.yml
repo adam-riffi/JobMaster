@@ -1,0 +1,23 @@
+script:
+  id_script: Clients_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique clients
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.clients
+    TBL_HISTO: £BQ_HISTO.clients_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE clients
+          parametres:
+            Plateforme: BQ
+            Requete: Clients_alimentation_upsert_socle.gql
+
+        - job_id: job.run.sql
+          description: Insert historique clients_histo
+          parametres:
+            Plateforme: BQ
+            Requete: Clients_alimentation_insert_histo.gql

@@ -1,0 +1,7 @@
+-- Création de la table agrégat reporting_aggr_mensuel_direction (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_HISTO.reporting_aggr_mensuel_direction (
+  periode                  STRING         NOT NULL,
+  nb_enregistrements       INT64,
+  cumul_12m                INT64,
+  date_calcul              TIMESTAMP
+);

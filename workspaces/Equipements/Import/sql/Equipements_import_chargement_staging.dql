@@ -1,0 +1,25 @@
+-- Chargement des fichiers equipements dans la table staging Teradata
+INSERT INTO £TD_TMP.staging_equipements (
+  id_equipement,
+  id_client,
+  type_equipement,
+  marque,
+  modele,
+  imei,
+  date_installation,
+  statut,
+  version_firmware,
+  date_maj
+)
+SELECT
+  id_equipement,
+  id_client,
+  type_equipement,
+  marque,
+  modele,
+  imei,
+  date_installation,
+  statut,
+  version_firmware,
+  date_maj
+FROM £TD_TMP.ext_staging_equipements;

@@ -1,0 +1,7 @@
+-- Insert historique journalier alertes_fraude_histo (Teradata)
+INSERT INTO £TD_HISTO.alertes_fraude_histo
+SELECT
+  s.id_alerte, s.id_client, s.date_detection, s.type_fraude, s.score_risque, s.montant_suspect, s.statut, s.agent_investigation, s.date_cloture,
+  CURRENT_TIMESTAMP AS date_maj
+FROM £TD_SOCLE.alertes_fraude s
+WHERE CAST(s.date_maj AS DATE) = CURRENT_DATE;

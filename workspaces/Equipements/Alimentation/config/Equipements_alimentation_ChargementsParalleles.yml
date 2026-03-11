@@ -1,0 +1,23 @@
+script:
+  id_script: Equipements_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique equipements
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.equipements
+    TBL_HISTO: £TD_HISTO.equipements_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE equipements
+          parametres:
+            Plateforme: TD
+            Requete: Equipements_alimentation_upsert_socle.dql
+
+        - job_id: job.run.sql
+          description: Insert historique equipements_histo
+          parametres:
+            Plateforme: TD
+            Requete: Equipements_alimentation_insert_histo.dql

@@ -1,0 +1,21 @@
+script:
+  id_script: Fraude_Aggregat_MensuelParSegment
+  description: Agrégation mensuelle du SOCLE alertes_fraude par segment métier
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.alertes_fraude
+    TBL_AGGR: £TD_HISTO.fraude_aggr_mensuel_type
+    PERIODE: £YEAR£MONTH
+
+  jobs:
+    - job_id: job.run.sql
+      description: Supprime les agrégats du mois courant avant recalcul
+      parametres:
+        Plateforme: TD
+        Requete: Fraude_aggregat_delete_mensuel.dql
+
+    - job_id: job.run.sql
+      description: Calcule et insère les agrégats mensuels par segment
+      parametres:
+        Plateforme: TD
+        Requete: Fraude_aggregat_insert_mensuel_segment.dql

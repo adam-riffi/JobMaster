@@ -1,0 +1,4 @@
+-- Vérification que le SOCLE alertes_fraude a été mis à jour aujourd'hui
+SELECT CASE WHEN COUNT(*) > 0 THEN 'OUI' ELSE 'NON' END
+FROM £TD_SOCLE.alertes_fraude
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

@@ -1,0 +1,16 @@
+-- Calcul cumul glissant 12 mois pour reseau_aggr_kpi_journalier (Teradata)
+DELETE FROM £TD_HISTO.reseau_aggr_kpi_journalier
+WHERE date_calcul >= (CURRENT_DATE - EXTRACT(DAY FROM CURRENT_DATE) + 1);
+
+INSERT INTO £TD_HISTO.reseau_aggr_kpi_journalier
+SELECT
+  TO_CHAR(h.periode_date, 'YYYYMM') AS periode,
+  SUM(h.nb_enregistrements) OVER (
+    ORDER BY h.periode_date ROWS BETWEEN 11 PRECEDING AND CURRENT ROW
+  ) AS cumul_12m,
+  CURRENT_TIMESTAMP AS date_calcul
+FROM (
+  SELECT CAST(periode AS DATE FORMAT 'YYYYMM') AS periode_date, nb_enregistrements
+  FROM £TD_HISTO.sites_reseau_histo
+) h
+ORDER BY h.periode_date;

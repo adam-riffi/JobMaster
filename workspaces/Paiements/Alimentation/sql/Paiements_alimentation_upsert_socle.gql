@@ -1,0 +1,17 @@
+-- MERGE staging → SOCLE paiements (BigQuery)
+MERGE £BQ_SOCLE.paiements AS cible
+USING £BQ_TMP.staging_paiements AS staging
+ON cible.id_paiement = staging.id_paiement
+WHEN MATCHED THEN
+  UPDATE SET
+    cible.id_facture = staging.id_facture,
+    cible.id_client = staging.id_client,
+    cible.date_paiement = staging.date_paiement,
+    cible.montant = staging.montant,
+    cible.mode_paiement = staging.mode_paiement,
+    cible.statut = staging.statut,
+    cible.reference_bancaire = staging.reference_bancaire,
+    cible.date_maj = CURRENT_TIMESTAMP()
+WHEN NOT MATCHED THEN
+  INSERT (id_paiement, id_facture, id_client, date_paiement, montant, mode_paiement, statut, reference_bancaire, date_maj)
+  VALUES (staging.id_paiement, staging.id_facture, staging.id_client, staging.date_paiement, staging.montant, staging.mode_paiement, staging.statut, staging.reference_bancaire, CURRENT_TIMESTAMP());

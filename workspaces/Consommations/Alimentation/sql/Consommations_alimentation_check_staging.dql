@@ -1,0 +1,4 @@
+-- Vérifie si la staging staging_cdr_voix contient des lignes aujourd'hui
+SELECT CASE WHEN COUNT(*) > 0 THEN 'OUI' ELSE 'NON' END
+FROM £TD_TMP.staging_cdr_voix
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

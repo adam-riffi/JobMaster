@@ -1,0 +1,7 @@
+-- Insert historique journalier paiements_histo (BigQuery)
+INSERT INTO £BQ_HISTO.paiements_histo
+SELECT
+  s.id_paiement, s.id_facture, s.id_client, s.date_paiement, s.montant, s.mode_paiement, s.statut, s.reference_bancaire,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.paiements s
+WHERE DATE(s.date_maj) = CURRENT_DATE();

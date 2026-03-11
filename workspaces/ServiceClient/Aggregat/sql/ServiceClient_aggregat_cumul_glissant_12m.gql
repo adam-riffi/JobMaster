@@ -1,0 +1,17 @@
+-- Calcul cumul glissant 12 mois pour interactions_aggr_nps_mensuel (BigQuery)
+DELETE FROM £BQ_HISTO.interactions_aggr_nps_mensuel
+WHERE date_calcul >= TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), MONTH);
+
+INSERT INTO £BQ_HISTO.interactions_aggr_nps_mensuel
+SELECT
+  FORMAT_DATE('%Y%m', h.periode_date) AS periode,
+  SUM(h.nb_enregistrements) OVER (
+    ORDER BY h.periode_date
+    ROWS BETWEEN 11 PRECEDING AND CURRENT ROW
+  ) AS cumul_12m,
+  CURRENT_TIMESTAMP() AS date_calcul
+FROM (
+  SELECT PARSE_DATE('%Y%m', periode) AS periode_date, nb_enregistrements
+  FROM £BQ_HISTO.interactions_histo
+) h
+ORDER BY h.periode_date;

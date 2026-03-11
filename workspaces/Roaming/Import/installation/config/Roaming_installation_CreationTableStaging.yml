@@ -1,0 +1,13 @@
+script:
+  id_script: Roaming_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_roaming (TD)
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_roaming
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_roaming sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Roaming_installation_creation_table_staging.dql

@@ -1,0 +1,25 @@
+-- Chargement des fichiers interconnexion dans la table staging Teradata
+INSERT INTO £TD_TMP.staging_interconnexion (
+  id_interconnexion,
+  operateur_source,
+  operateur_cible,
+  date_transit,
+  type_trafic,
+  volume_minutes,
+  tarif_minute,
+  montant_total,
+  statut_facturation,
+  date_maj
+)
+SELECT
+  id_interconnexion,
+  operateur_source,
+  operateur_cible,
+  date_transit,
+  type_trafic,
+  volume_minutes,
+  tarif_minute,
+  montant_total,
+  statut_facturation,
+  date_maj
+FROM £TD_TMP.ext_staging_interconnexion;

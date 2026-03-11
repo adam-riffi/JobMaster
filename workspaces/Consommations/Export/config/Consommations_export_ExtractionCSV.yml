@@ -1,0 +1,18 @@
+script:
+  id_script: Consommations_Export_ExtractionCSV
+  description: Extraction du SOCLE cdr_voix vers fichiers CSV datés
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.cdr_voix
+    REP_EXPORT: C:\data\consommations\export
+    NOM_FICHIER: consommations_£DATE.csv
+
+  jobs:
+    - job_id: job.table.extraction
+      description: Extrait la table cdr_voix en CSV
+      parametres:
+        Plateforme: TD
+        TableSource: £TBL_SOCLE
+        Destination: £REP_EXPORT
+        NomFichier: £NOM_FICHIER
+        Format: csv

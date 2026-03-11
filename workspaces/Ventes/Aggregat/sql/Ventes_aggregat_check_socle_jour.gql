@@ -1,0 +1,4 @@
+-- Vérification que le SOCLE ventes a été mis à jour aujourd'hui
+SELECT IF(COUNT(*) > 0, 'OUI', 'NON')
+FROM £BQ_SOCLE.ventes
+WHERE DATE(date_maj) = CURRENT_DATE();

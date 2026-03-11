@@ -1,0 +1,15 @@
+script:
+  id_script: Paiements_Import_RapatriementSFTP
+  description: Rapatriement des fichiers paiements depuis le SFTP source vers la zone d'entrée
+
+  parametres_env:
+    SFTP_SOURCE: sftp://banque-partner/paiements/in
+    REP_IN: C:\data\paiements\in
+
+  jobs:
+    - job_id: job.externe.import
+      description: Récupère les fichiers paiements depuis le SFTP
+      parametres:
+        Source: £SFTP_SOURCE
+        Cible: £REP_IN
+        Type: sftp

@@ -1,0 +1,15 @@
+script:
+  id_script: Ventes_Import_RapatriementSFTP
+  description: Rapatriement des fichiers ventes depuis le SFTP source vers la zone d'entrée
+
+  parametres_env:
+    SFTP_SOURCE: sftp://crm-sales/ventes/in
+    REP_IN: C:\data\ventes\in
+
+  jobs:
+    - job_id: job.externe.import
+      description: Récupère les fichiers ventes depuis le SFTP
+      parametres:
+        Source: £SFTP_SOURCE
+        Cible: £REP_IN
+        Type: sftp

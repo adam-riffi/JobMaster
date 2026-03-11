@@ -1,0 +1,14 @@
+-- Création de la table SOCLE equipements (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_SOCLE.equipements (
+  id_equipement                       VARCHAR(36) NOT NULL,
+  id_client                           VARCHAR(20),
+  type_equipement                     VARCHAR(30),
+  marque                              VARCHAR(50),
+  modele                              VARCHAR(100),
+  imei                                VARCHAR(20),
+  date_installation                   DATE,
+  statut                              VARCHAR(20),
+  version_firmware                    VARCHAR(50),
+  date_maj                            TIMESTAMP
+)
+PRIMARY INDEX (id_equipement);

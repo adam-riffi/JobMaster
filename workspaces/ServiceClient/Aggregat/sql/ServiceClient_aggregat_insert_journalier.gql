@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans interactions_histo (BigQuery)
+INSERT INTO £BQ_HISTO.interactions_histo (
+  id_interaction,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'serviceclient' AS id_interaction,
+  CURRENT_DATE() AS date_agregat,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.interactions
+WHERE DATE(date_maj) = CURRENT_DATE();

@@ -1,0 +1,12 @@
+-- Création de la table SOCLE contrats (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_SOCLE.contrats (
+  id_contrat                          STRING NOT NULL
+  id_client                           STRING
+  type_offre                          STRING
+  technologie                         STRING
+  date_debut                          DATE
+  date_fin                            DATE
+  statut                              STRING
+  montant_mensuel                     NUMERIC
+  date_maj                            TIMESTAMP
+);

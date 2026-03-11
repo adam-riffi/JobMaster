@@ -1,0 +1,19 @@
+-- Agrégation mensuelle fraude_aggr_mensuel_type par segment (Teradata)
+
+-- Flux transverse : jointures avec tables d'autres domaines
+-- Référence cross-domaine : £TD_SOCLE.cdr_voix (domaine Consommations)
+LEFT JOIN £TD_SOCLE.cdr_voix ext_cdr_voix ON t.id_alerte = ext_cdr_voix.id_alerte
+-- Référence cross-domaine : £BQ_SOCLE.clients (domaine Clients)
+LEFT JOIN £BQ_SOCLE.clients ext_clients ON t.id_alerte = ext_clients.id_alerte
+
+INSERT INTO £TD_HISTO.fraude_aggr_mensuel_type (
+  periode,
+  nb_enregistrements,
+  date_calcul
+)
+SELECT
+  TO_CHAR(CURRENT_DATE, 'YYYYMM') AS periode,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP AS date_calcul
+FROM £TD_SOCLE.alertes_fraude t
+WHERE CAST(t.date_maj AS DATE) >= (CURRENT_DATE - EXTRACT(DAY FROM CURRENT_DATE) + 1);

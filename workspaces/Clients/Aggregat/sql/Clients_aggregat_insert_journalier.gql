@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans clients_histo (BigQuery)
+INSERT INTO £BQ_HISTO.clients_histo (
+  id_client,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'clients' AS id_client,
+  CURRENT_DATE() AS date_agregat,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.clients
+WHERE DATE(date_maj) = CURRENT_DATE();

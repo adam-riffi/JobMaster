@@ -1,0 +1,27 @@
+-- Chargement des fichiers incidents dans la table staging Teradata
+INSERT INTO £TD_TMP.staging_incidents (
+  id_incident,
+  id_site,
+  date_debut,
+  heure_debut,
+  date_fin,
+  severite,
+  type_incident,
+  zones_impactees,
+  nb_clients_touches,
+  statut,
+  date_maj
+)
+SELECT
+  id_incident,
+  id_site,
+  date_debut,
+  heure_debut,
+  date_fin,
+  severite,
+  type_incident,
+  zones_impactees,
+  nb_clients_touches,
+  statut,
+  date_maj
+FROM £TD_TMP.ext_staging_incidents;

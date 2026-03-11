@@ -1,0 +1,33 @@
+script:
+  id_script: Recouvrement_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE creances depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_creances
+    TBL_SOCLE: £TD_SOCLE.creances
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: TD
+        Requete: Recouvrement_alimentation_check_staging.dql
+        Variable: FLAG_STAGING_RECOUVREMENT
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_RECOUVREMENT
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE creances
+          parametres:
+            Plateforme: TD
+            Requete: Recouvrement_alimentation_upsert_socle.dql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier creances
+          parametres:
+            Plateforme: TD
+            Table: £TBL_SOCLE

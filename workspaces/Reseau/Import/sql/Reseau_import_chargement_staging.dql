@@ -1,0 +1,25 @@
+-- Chargement des fichiers reseau dans la table staging Teradata
+INSERT INTO £TD_TMP.staging_sites_reseau (
+  id_site,
+  code_site,
+  technologie,
+  region,
+  latitude,
+  longitude,
+  capacite_max_mo,
+  trafic_actuel_mo,
+  statut,
+  date_maj
+)
+SELECT
+  id_site,
+  code_site,
+  technologie,
+  region,
+  latitude,
+  longitude,
+  capacite_max_mo,
+  trafic_actuel_mo,
+  statut,
+  date_maj
+FROM £TD_TMP.ext_staging_sites_reseau;

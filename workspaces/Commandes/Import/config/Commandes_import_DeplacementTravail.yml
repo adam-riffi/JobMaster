@@ -1,0 +1,17 @@
+script:
+  id_script: Commandes_Import_DeplacementTravail
+  description: Déplacement des fichiers commandes de la zone d'entrée vers la zone de travail
+
+  parametres_env:
+    REP_IN: C:\data\commandes\in
+    REP_WORK: C:\data\commandes\work
+    MASQUE_COMMANDES: "^commandes_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.manipulation
+      description: Déplace les fichiers vers la zone de travail
+      parametres:
+        Source: £REP_IN
+        Cible: £REP_WORK
+        Masque: £MASQUE_COMMANDES
+        Mode: deplacement

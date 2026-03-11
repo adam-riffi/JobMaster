@@ -1,0 +1,7 @@
+-- Insert historique journalier produits_histo (BigQuery)
+INSERT INTO £BQ_HISTO.produits_histo
+SELECT
+  s.id_produit, s.libelle, s.type_produit, s.technologie, s.prix_ht, s.prix_ttc, s.actif, s.date_lancement,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.produits s
+WHERE DATE(s.date_maj) = CURRENT_DATE();

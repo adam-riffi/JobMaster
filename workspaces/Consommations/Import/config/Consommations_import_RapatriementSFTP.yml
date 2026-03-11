@@ -1,0 +1,15 @@
+script:
+  id_script: Consommations_Import_RapatriementSFTP
+  description: Rapatriement des fichiers consommations depuis le SFTP source vers la zone d'entrée
+
+  parametres_env:
+    SFTP_SOURCE: sftp://mediation-platform/cdr/voix
+    REP_IN: C:\data\consommations\in
+
+  jobs:
+    - job_id: job.externe.import
+      description: Récupère les fichiers consommations depuis le SFTP
+      parametres:
+        Source: £SFTP_SOURCE
+        Cible: £REP_IN
+        Type: sftp

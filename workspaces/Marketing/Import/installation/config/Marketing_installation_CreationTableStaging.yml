@@ -1,0 +1,13 @@
+script:
+  id_script: Marketing_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_campagnes (BQ)
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_campagnes
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_campagnes sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Marketing_installation_creation_table_staging.gql

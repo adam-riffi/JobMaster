@@ -1,0 +1,14 @@
+script:
+  id_script: Contrats_Aggregat_CumulGlissant
+  description: Calcul des cumuls glissants sur 12 mois pour le domaine contrats
+
+  parametres_env:
+    TBL_HISTO: £BQ_HISTO.contrats_histo
+    TBL_AGGR: £BQ_HISTO.contrats_aggr_actifs_mensuel
+
+  jobs:
+    - job_id: job.run.sql
+      description: Recalcule le cumul glissant 12 mois
+      parametres:
+        Plateforme: BQ
+        Requete: Contrats_aggregat_cumul_glissant_12m.gql

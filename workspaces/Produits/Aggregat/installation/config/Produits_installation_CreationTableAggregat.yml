@@ -1,0 +1,13 @@
+script:
+  id_script: Produits_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat produits_aggr_ventes_mensuel (BQ)
+
+  parametres_env:
+    TBL_AGGR: £BQ_HISTO.produits_aggr_ventes_mensuel
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat produits_aggr_ventes_mensuel sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Produits_installation_creation_table_aggregat.gql

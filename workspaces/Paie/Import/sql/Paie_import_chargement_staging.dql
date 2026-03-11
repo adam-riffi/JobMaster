@@ -1,0 +1,25 @@
+-- Chargement des fichiers paie dans la table staging Teradata
+INSERT INTO £TD_TMP.staging_paie (
+  id_paie,
+  id_employe,
+  periode,
+  salaire_brut,
+  cotisations_patronales,
+  cotisations_salariales,
+  salaire_net,
+  mode_paiement,
+  date_virement,
+  date_maj
+)
+SELECT
+  id_paie,
+  id_employe,
+  periode,
+  salaire_brut,
+  cotisations_patronales,
+  cotisations_salariales,
+  salaire_net,
+  mode_paiement,
+  date_virement,
+  date_maj
+FROM £TD_TMP.ext_staging_paie;

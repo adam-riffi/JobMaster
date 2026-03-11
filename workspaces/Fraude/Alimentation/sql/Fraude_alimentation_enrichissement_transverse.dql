@@ -1,0 +1,10 @@
+-- Enrichissement transverse alertes_fraude (Teradata)
+-- Ce flux est TRANSVERSE : il emprunte des tables d'autres domaines.
+-- Référence cross-domaine : £TD_SOCLE.cdr_voix (domaine Consommations)
+LEFT JOIN £TD_SOCLE.cdr_voix ext_cdr_voix ON t.id_alerte = ext_cdr_voix.id_alerte
+-- Référence cross-domaine : £BQ_SOCLE.clients (domaine Clients)
+LEFT JOIN £BQ_SOCLE.clients ext_clients ON t.id_alerte = ext_clients.id_alerte
+INSERT INTO £TD_TMP.alertes_fraude_enrichi
+SELECT
+  t.*
+FROM £TD_SOCLE.alertes_fraude t;

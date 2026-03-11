@@ -1,0 +1,13 @@
+script:
+  id_script: Paiements_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat paiements_aggr_mensuel (BQ)
+
+  parametres_env:
+    TBL_AGGR: £BQ_HISTO.paiements_aggr_mensuel
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat paiements_aggr_mensuel sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Paiements_installation_creation_table_aggregat.gql

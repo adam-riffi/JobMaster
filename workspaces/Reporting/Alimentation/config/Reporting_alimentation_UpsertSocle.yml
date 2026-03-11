@@ -1,0 +1,33 @@
+script:
+  id_script: Reporting_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE kpi_global depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_kpi_global
+    TBL_SOCLE: £BQ_SOCLE.kpi_global
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: BQ
+        Requete: Reporting_alimentation_check_staging.gql
+        Variable: FLAG_STAGING_REPORTING
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_REPORTING
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE kpi_global
+          parametres:
+            Plateforme: BQ
+            Requete: Reporting_alimentation_upsert_socle.gql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier kpi_global
+          parametres:
+            Plateforme: BQ
+            Table: £TBL_SOCLE

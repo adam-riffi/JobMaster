@@ -1,0 +1,13 @@
+script:
+  id_script: Roaming_Installation_CreationTableSocle
+  description: Création initiale de la table SOCLE roaming (TD)
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.roaming
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table SOCLE roaming sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Roaming_installation_creation_table_socle.dql

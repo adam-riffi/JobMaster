@@ -1,0 +1,13 @@
+script:
+  id_script: Incidents_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat incidents_aggr_journalier_severite (TD)
+
+  parametres_env:
+    TBL_AGGR: £TD_HISTO.incidents_aggr_journalier_severite
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat incidents_aggr_journalier_severite sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Incidents_installation_creation_table_aggregat.dql

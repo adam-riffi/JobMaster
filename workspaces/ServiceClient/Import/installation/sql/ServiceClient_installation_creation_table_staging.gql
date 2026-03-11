@@ -1,0 +1,14 @@
+-- Création de la table staging staging_interactions (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_TMP.staging_interactions (
+  id_interaction                      STRING NOT NULL
+  id_client                           STRING
+  date_interaction                    DATE
+  canal_contact                       STRING
+  motif                               STRING
+  statut                              STRING
+  duree_traitement                    INT64
+  note_satisfaction                   INT64
+  agent_id                            STRING
+  date_maj                            TIMESTAMP
+)
+OPTIONS (expiration_timestamp = NULL);

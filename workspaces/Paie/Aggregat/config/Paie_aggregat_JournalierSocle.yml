@@ -1,0 +1,28 @@
+script:
+  id_script: Paie_Aggregat_JournalierSocle
+  description: Agrégation journalière du SOCLE paie_employes vers l'historique
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.paie_employes
+    TBL_HISTO: £TD_HISTO.paie_histo
+    PERIODE: £DATE
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que le SOCLE a été alimenté aujourd'hui
+      parametres:
+        Plateforme: TD
+        Requete: Paie_aggregat_check_socle_jour.dql
+        Variable: FLAG_SOCLE_PAIE
+
+    - job_id: job.conditionnelle.si
+      description: Agrège uniquement si le SOCLE est à jour
+      parametres:
+        Variable: FLAG_SOCLE_PAIE
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: Insère les données du jour dans l'historique
+          parametres:
+            Plateforme: TD
+            Requete: Paie_aggregat_insert_journalier.dql

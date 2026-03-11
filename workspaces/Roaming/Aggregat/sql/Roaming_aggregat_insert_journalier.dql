@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans roaming_histo (Teradata)
+INSERT INTO £TD_HISTO.roaming_histo (
+  id_roaming,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'roaming',
+  CURRENT_DATE,
+  COUNT(*),
+  CURRENT_TIMESTAMP
+FROM £TD_SOCLE.roaming
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

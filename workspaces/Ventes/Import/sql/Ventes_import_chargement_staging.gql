@@ -1,0 +1,8 @@
+-- Chargement des fichiers ventes dans la table staging BigQuery
+LOAD DATA OVERWRITE £BQ_TMP.staging_ventes
+FROM FILES (
+  format = 'CSV',
+  uris = ['gs://telecom-landing/ventes/*.csv'],
+  skip_leading_rows = 1,
+  field_delimiter = ';'
+);

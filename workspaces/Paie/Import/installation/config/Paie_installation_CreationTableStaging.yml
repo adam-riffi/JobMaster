@@ -1,0 +1,13 @@
+script:
+  id_script: Paie_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_paie (TD)
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_paie
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_paie sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Paie_installation_creation_table_staging.dql

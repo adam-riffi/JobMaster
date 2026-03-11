@@ -1,0 +1,23 @@
+script:
+  id_script: Finance_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique finance
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.comptes_financiers
+    TBL_HISTO: £BQ_HISTO.comptes_financiers_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE comptes_financiers
+          parametres:
+            Plateforme: BQ
+            Requete: Finance_alimentation_upsert_socle.gql
+
+        - job_id: job.run.sql
+          description: Insert historique comptes_financiers_histo
+          parametres:
+            Plateforme: BQ
+            Requete: Finance_alimentation_insert_histo.gql

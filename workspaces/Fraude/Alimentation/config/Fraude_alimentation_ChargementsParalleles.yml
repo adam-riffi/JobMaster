@@ -1,0 +1,23 @@
+script:
+  id_script: Fraude_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique fraude
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.alertes_fraude
+    TBL_HISTO: £TD_HISTO.alertes_fraude_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE alertes_fraude
+          parametres:
+            Plateforme: TD
+            Requete: Fraude_alimentation_upsert_socle.dql
+
+        - job_id: job.run.sql
+          description: Insert historique alertes_fraude_histo
+          parametres:
+            Plateforme: TD
+            Requete: Fraude_alimentation_insert_histo.dql

@@ -1,0 +1,21 @@
+script:
+  id_script: Equipements_Aggregat_MensuelParSegment
+  description: Agrégation mensuelle du SOCLE equipements par segment métier
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.equipements
+    TBL_AGGR: £TD_HISTO.equipements_aggr_parc_mensuel
+    PERIODE: £YEAR£MONTH
+
+  jobs:
+    - job_id: job.run.sql
+      description: Supprime les agrégats du mois courant avant recalcul
+      parametres:
+        Plateforme: TD
+        Requete: Equipements_aggregat_delete_mensuel.dql
+
+    - job_id: job.run.sql
+      description: Calcule et insère les agrégats mensuels par segment
+      parametres:
+        Plateforme: TD
+        Requete: Equipements_aggregat_insert_mensuel_segment.dql

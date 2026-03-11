@@ -33,6 +33,6 @@ build/
 
 # Dossiers générés
 Facturation/
-workspaces/
-docs/
+#workspaces/
+#docs/
 .claude/

@@ -1,0 +1,18 @@
+script:
+  id_script: Paie_Export_ExtractionCSV
+  description: Extraction du SOCLE paie_employes vers fichiers CSV datés
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.paie_employes
+    REP_EXPORT: C:\data\paie\export
+    NOM_FICHIER: paie_£DATE.csv
+
+  jobs:
+    - job_id: job.table.extraction
+      description: Extrait la table paie_employes en CSV
+      parametres:
+        Plateforme: TD
+        TableSource: £TBL_SOCLE
+        Destination: £REP_EXPORT
+        NomFichier: £NOM_FICHIER
+        Format: csv

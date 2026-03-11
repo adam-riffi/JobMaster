@@ -1,0 +1,20 @@
+script:
+  id_script: Reporting_Import_ControleCSV
+  description: Validation structurelle des fichiers reporting avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\reporting\work
+    REP_ERR: C:\data\reporting\erreur
+    MASQUE_REPORTING: "^kpi_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers reporting
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_REPORTING
+        Colonnes: "id_kpi,periode,domaine,indicateur,valeur,unite"
+        Separateur: ";"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

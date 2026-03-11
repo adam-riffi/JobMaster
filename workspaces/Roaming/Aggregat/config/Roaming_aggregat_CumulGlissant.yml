@@ -1,0 +1,14 @@
+script:
+  id_script: Roaming_Aggregat_CumulGlissant
+  description: Calcul des cumuls glissants sur 12 mois pour le domaine roaming
+
+  parametres_env:
+    TBL_HISTO: £TD_HISTO.roaming_histo
+    TBL_AGGR: £TD_HISTO.roaming_aggr_mensuel_pays
+
+  jobs:
+    - job_id: job.run.sql
+      description: Recalcule le cumul glissant 12 mois
+      parametres:
+        Plateforme: TD
+        Requete: Roaming_aggregat_cumul_glissant_12m.dql

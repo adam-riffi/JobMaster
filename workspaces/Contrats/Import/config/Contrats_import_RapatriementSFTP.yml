@@ -1,0 +1,15 @@
+script:
+  id_script: Contrats_Import_RapatriementSFTP
+  description: Rapatriement des fichiers contrats depuis le SFTP source vers la zone d'entrée
+
+  parametres_env:
+    SFTP_SOURCE: sftp://crm-partner/contrats/in
+    REP_IN: C:\data\contrats\in
+
+  jobs:
+    - job_id: job.externe.import
+      description: Récupère les fichiers contrats depuis le SFTP
+      parametres:
+        Source: £SFTP_SOURCE
+        Cible: £REP_IN
+        Type: sftp

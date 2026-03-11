@@ -1,0 +1,8 @@
+-- Création de la table agrégat roaming_aggr_mensuel_pays (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_HISTO.roaming_aggr_mensuel_pays (
+  periode                  VARCHAR(7)     NOT NULL,
+  nb_enregistrements       INTEGER,
+  cumul_12m                INTEGER,
+  date_calcul              TIMESTAMP
+)
+PRIMARY INDEX (periode);

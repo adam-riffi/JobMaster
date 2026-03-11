@@ -1,0 +1,20 @@
+script:
+  id_script: Incidents_Import_ControleCSV
+  description: Validation structurelle des fichiers incidents avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\incidents\work
+    REP_ERR: C:\data\incidents\erreur
+    MASQUE_INCIDENTS: "^incidents_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers incidents
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_INCIDENTS
+        Colonnes: "id_incident,id_site,date_debut,heure_debut,date_fin,severite"
+        Separateur: "|"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

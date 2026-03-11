@@ -1,0 +1,33 @@
+script:
+  id_script: Commandes_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE commandes depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_commandes
+    TBL_SOCLE: £BQ_SOCLE.commandes
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: BQ
+        Requete: Commandes_alimentation_check_staging.gql
+        Variable: FLAG_STAGING_COMMANDES
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_COMMANDES
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE commandes
+          parametres:
+            Plateforme: BQ
+            Requete: Commandes_alimentation_upsert_socle.gql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier commandes
+          parametres:
+            Plateforme: BQ
+            Table: £TBL_SOCLE

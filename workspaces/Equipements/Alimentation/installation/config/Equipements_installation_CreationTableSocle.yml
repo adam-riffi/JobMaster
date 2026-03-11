@@ -1,0 +1,13 @@
+script:
+  id_script: Equipements_Installation_CreationTableSocle
+  description: Création initiale de la table SOCLE equipements (TD)
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.equipements
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table SOCLE equipements sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Equipements_installation_creation_table_socle.dql

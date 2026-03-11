@@ -1,0 +1,17 @@
+-- Agrégation mensuelle equipements_aggr_parc_mensuel par segment (Teradata)
+
+-- Flux transverse : jointures avec tables d'autres domaines
+-- Référence cross-domaine : £BQ_SOCLE.clients (domaine Clients)
+LEFT JOIN £BQ_SOCLE.clients ext_clients ON t.id_equipement = ext_clients.id_equipement
+
+INSERT INTO £TD_HISTO.equipements_aggr_parc_mensuel (
+  periode,
+  nb_enregistrements,
+  date_calcul
+)
+SELECT
+  TO_CHAR(CURRENT_DATE, 'YYYYMM') AS periode,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP AS date_calcul
+FROM £TD_SOCLE.equipements t
+WHERE CAST(t.date_maj AS DATE) >= (CURRENT_DATE - EXTRACT(DAY FROM CURRENT_DATE) + 1);

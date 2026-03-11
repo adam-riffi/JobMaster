@@ -1,0 +1,13 @@
+script:
+  id_script: Clients_Installation_CreationTableSocle
+  description: Création initiale de la table SOCLE clients (BQ)
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.clients
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table SOCLE clients sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Clients_installation_creation_table_socle.gql

@@ -1,0 +1,33 @@
+script:
+  id_script: Roaming_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE roaming depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_roaming
+    TBL_SOCLE: £TD_SOCLE.roaming
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: TD
+        Requete: Roaming_alimentation_check_staging.dql
+        Variable: FLAG_STAGING_ROAMING
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_ROAMING
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE roaming
+          parametres:
+            Plateforme: TD
+            Requete: Roaming_alimentation_upsert_socle.dql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier roaming
+          parametres:
+            Plateforme: TD
+            Table: £TBL_SOCLE

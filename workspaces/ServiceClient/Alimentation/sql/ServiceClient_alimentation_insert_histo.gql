@@ -1,0 +1,7 @@
+-- Insert historique journalier interactions_histo (BigQuery)
+INSERT INTO £BQ_HISTO.interactions_histo
+SELECT
+  s.id_interaction, s.id_client, s.date_interaction, s.canal_contact, s.motif, s.statut, s.duree_traitement, s.note_satisfaction, s.agent_id,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.interactions s
+WHERE DATE(s.date_maj) = CURRENT_DATE();

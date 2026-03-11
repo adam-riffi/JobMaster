@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans cdr_voix_histo (Teradata)
+INSERT INTO £TD_HISTO.cdr_voix_histo (
+  id_cdr,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'consommations',
+  CURRENT_DATE,
+  COUNT(*),
+  CURRENT_TIMESTAMP
+FROM £TD_SOCLE.cdr_voix
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans incidents_histo (Teradata)
+INSERT INTO £TD_HISTO.incidents_histo (
+  id_incident,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'incidents',
+  CURRENT_DATE,
+  COUNT(*),
+  CURRENT_TIMESTAMP
+FROM £TD_SOCLE.incidents
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

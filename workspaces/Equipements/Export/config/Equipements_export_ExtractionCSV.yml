@@ -1,0 +1,18 @@
+script:
+  id_script: Equipements_Export_ExtractionCSV
+  description: Extraction du SOCLE equipements vers fichiers CSV datés
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.equipements
+    REP_EXPORT: C:\data\equipements\export
+    NOM_FICHIER: equipements_£DATE.csv
+
+  jobs:
+    - job_id: job.table.extraction
+      description: Extrait la table equipements en CSV
+      parametres:
+        Plateforme: TD
+        TableSource: £TBL_SOCLE
+        Destination: £REP_EXPORT
+        NomFichier: £NOM_FICHIER
+        Format: csv

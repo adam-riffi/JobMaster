@@ -1,0 +1,28 @@
+script:
+  id_script: Clients_Aggregat_JournalierSocle
+  description: Agrégation journalière du SOCLE clients vers l'historique
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.clients
+    TBL_HISTO: £BQ_HISTO.clients_histo
+    PERIODE: £DATE
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que le SOCLE a été alimenté aujourd'hui
+      parametres:
+        Plateforme: BQ
+        Requete: Clients_aggregat_check_socle_jour.gql
+        Variable: FLAG_SOCLE_CLIENTS
+
+    - job_id: job.conditionnelle.si
+      description: Agrège uniquement si le SOCLE est à jour
+      parametres:
+        Variable: FLAG_SOCLE_CLIENTS
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: Insère les données du jour dans l'historique
+          parametres:
+            Plateforme: BQ
+            Requete: Clients_aggregat_insert_journalier.gql

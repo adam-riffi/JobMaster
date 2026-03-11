@@ -1,0 +1,17 @@
+script:
+  id_script: Fraude_Import_DeplacementTravail
+  description: Déplacement des fichiers fraude de la zone d'entrée vers la zone de travail
+
+  parametres_env:
+    REP_IN: C:\data\fraude\in
+    REP_WORK: C:\data\fraude\work
+    MASQUE_FRAUDE: "^fraude_alertes_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.manipulation
+      description: Déplace les fichiers vers la zone de travail
+      parametres:
+        Source: £REP_IN
+        Cible: £REP_WORK
+        Masque: £MASQUE_FRAUDE
+        Mode: deplacement

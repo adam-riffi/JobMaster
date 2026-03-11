@@ -1,0 +1,16 @@
+-- MERGE staging → SOCLE roaming (Teradata)
+MERGE £TD_SOCLE.roaming AS cible
+USING £TD_TMP.staging_roaming AS staging
+ON cible.id_roaming = staging.id_roaming
+WHEN MATCHED THEN UPDATE SET
+    cible.id_client = staging.id_client,
+    cible.date_debut = staging.date_debut,
+    cible.pays = staging.pays,
+    cible.operateur_partenaire = staging.operateur_partenaire,
+    cible.type_trafic = staging.type_trafic,
+    cible.volume_mo = staging.volume_mo,
+    cible.duree_secondes = staging.duree_secondes,
+    cible.cout_euros = staging.cout_euros,
+    cible.date_maj = CURRENT_TIMESTAMP
+WHEN NOT MATCHED THEN INSERT (id_roaming, id_client, date_debut, pays, operateur_partenaire, type_trafic, volume_mo, duree_secondes, cout_euros, date_maj)
+  VALUES (staging.id_roaming, staging.id_client, staging.date_debut, staging.pays, staging.operateur_partenaire, staging.type_trafic, staging.volume_mo, staging.duree_secondes, staging.cout_euros, CURRENT_TIMESTAMP);

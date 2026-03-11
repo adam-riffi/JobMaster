@@ -1,0 +1,7 @@
+-- Création de la table agrégat produits_aggr_ventes_mensuel (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_HISTO.produits_aggr_ventes_mensuel (
+  periode                  STRING         NOT NULL,
+  nb_enregistrements       INT64,
+  cumul_12m                INT64,
+  date_calcul              TIMESTAMP
+);

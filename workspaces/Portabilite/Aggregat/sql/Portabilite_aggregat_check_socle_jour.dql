@@ -1,0 +1,4 @@
+-- Vérification que le SOCLE portages a été mis à jour aujourd'hui
+SELECT CASE WHEN COUNT(*) > 0 THEN 'OUI' ELSE 'NON' END
+FROM £TD_SOCLE.portages
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

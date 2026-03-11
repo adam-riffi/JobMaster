@@ -1,0 +1,33 @@
+script:
+  id_script: Incidents_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE incidents depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_incidents
+    TBL_SOCLE: £TD_SOCLE.incidents
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: TD
+        Requete: Incidents_alimentation_check_staging.dql
+        Variable: FLAG_STAGING_INCIDENTS
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_INCIDENTS
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE incidents
+          parametres:
+            Plateforme: TD
+            Requete: Incidents_alimentation_upsert_socle.dql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier incidents
+          parametres:
+            Plateforme: TD
+            Table: £TBL_SOCLE

@@ -1,0 +1,8 @@
+-- Création de la table agrégat paie_aggr_mensuel_direction (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_HISTO.paie_aggr_mensuel_direction (
+  periode                  VARCHAR(7)     NOT NULL,
+  nb_enregistrements       INTEGER,
+  cumul_12m                INTEGER,
+  date_calcul              TIMESTAMP
+)
+PRIMARY INDEX (periode);

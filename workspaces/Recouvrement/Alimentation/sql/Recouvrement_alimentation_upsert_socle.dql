@@ -1,0 +1,16 @@
+-- MERGE staging → SOCLE creances (Teradata)
+MERGE £TD_SOCLE.creances AS cible
+USING £TD_TMP.staging_creances AS staging
+ON cible.id_creance = staging.id_creance
+WHEN MATCHED THEN UPDATE SET
+    cible.id_client = staging.id_client,
+    cible.id_facture = staging.id_facture,
+    cible.date_echeance = staging.date_echeance,
+    cible.montant_du = staging.montant_du,
+    cible.montant_recouvre = staging.montant_recouvre,
+    cible.nb_relances = staging.nb_relances,
+    cible.statut = staging.statut,
+    cible.date_contentieux = staging.date_contentieux,
+    cible.date_maj = CURRENT_TIMESTAMP
+WHEN NOT MATCHED THEN INSERT (id_creance, id_client, id_facture, date_echeance, montant_du, montant_recouvre, nb_relances, statut, date_contentieux, date_maj)
+  VALUES (staging.id_creance, staging.id_client, staging.id_facture, staging.date_echeance, staging.montant_du, staging.montant_recouvre, staging.nb_relances, staging.statut, staging.date_contentieux, CURRENT_TIMESTAMP);

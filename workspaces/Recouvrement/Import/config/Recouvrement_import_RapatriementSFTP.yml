@@ -1,0 +1,15 @@
+script:
+  id_script: Recouvrement_Import_RapatriementSFTP
+  description: Rapatriement des fichiers recouvrement depuis le SFTP source vers la zone d'entrée
+
+  parametres_env:
+    SFTP_SOURCE: sftp://recouvrement-system/creances/in
+    REP_IN: C:\data\recouvrement\in
+
+  jobs:
+    - job_id: job.externe.import
+      description: Récupère les fichiers recouvrement depuis le SFTP
+      parametres:
+        Source: £SFTP_SOURCE
+        Cible: £REP_IN
+        Type: sftp

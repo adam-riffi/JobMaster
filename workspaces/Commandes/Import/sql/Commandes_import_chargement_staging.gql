@@ -1,0 +1,8 @@
+-- Chargement des fichiers commandes dans la table staging BigQuery
+LOAD DATA OVERWRITE £BQ_TMP.staging_commandes
+FROM FILES (
+  format = 'CSV',
+  uris = ['gs://telecom-landing/commandes/*.csv'],
+  skip_leading_rows = 1,
+  field_delimiter = ';'
+);

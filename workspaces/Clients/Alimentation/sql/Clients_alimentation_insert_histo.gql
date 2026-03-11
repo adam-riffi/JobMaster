@@ -1,0 +1,7 @@
+-- Insert historique journalier clients_histo (BigQuery)
+INSERT INTO £BQ_HISTO.clients_histo
+SELECT
+  s.id_client, s.nom, s.prenom, s.email, s.telephone, s.date_naissance, s.segment, s.statut,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.clients s
+WHERE DATE(s.date_maj) = CURRENT_DATE();

@@ -1,0 +1,23 @@
+script:
+  id_script: Reporting_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique reporting
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.kpi_global
+    TBL_HISTO: £BQ_HISTO.kpi_global_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE kpi_global
+          parametres:
+            Plateforme: BQ
+            Requete: Reporting_alimentation_upsert_socle.gql
+
+        - job_id: job.run.sql
+          description: Insert historique kpi_global_histo
+          parametres:
+            Plateforme: BQ
+            Requete: Reporting_alimentation_insert_histo.gql

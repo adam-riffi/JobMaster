@@ -1,0 +1,17 @@
+-- MERGE staging → SOCLE produits (BigQuery)
+MERGE £BQ_SOCLE.produits AS cible
+USING £BQ_TMP.staging_produits AS staging
+ON cible.id_produit = staging.id_produit
+WHEN MATCHED THEN
+  UPDATE SET
+    cible.libelle = staging.libelle,
+    cible.type_produit = staging.type_produit,
+    cible.technologie = staging.technologie,
+    cible.prix_ht = staging.prix_ht,
+    cible.prix_ttc = staging.prix_ttc,
+    cible.actif = staging.actif,
+    cible.date_lancement = staging.date_lancement,
+    cible.date_maj = CURRENT_TIMESTAMP()
+WHEN NOT MATCHED THEN
+  INSERT (id_produit, libelle, type_produit, technologie, prix_ht, prix_ttc, actif, date_lancement, date_maj)
+  VALUES (staging.id_produit, staging.libelle, staging.type_produit, staging.technologie, staging.prix_ht, staging.prix_ttc, staging.actif, staging.date_lancement, CURRENT_TIMESTAMP());

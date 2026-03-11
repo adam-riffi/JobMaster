@@ -1,0 +1,16 @@
+-- MERGE staging → SOCLE portages (Teradata)
+MERGE £TD_SOCLE.portages AS cible
+USING £TD_TMP.staging_portages AS staging
+ON cible.id_portage = staging.id_portage
+WHEN MATCHED THEN UPDATE SET
+    cible.msisdn = staging.msisdn,
+    cible.operateur_source = staging.operateur_source,
+    cible.operateur_cible = staging.operateur_cible,
+    cible.date_demande = staging.date_demande,
+    cible.date_portage = staging.date_portage,
+    cible.statut = staging.statut,
+    cible.motif_rejet = staging.motif_rejet,
+    cible.type_portage = staging.type_portage,
+    cible.date_maj = CURRENT_TIMESTAMP
+WHEN NOT MATCHED THEN INSERT (id_portage, msisdn, operateur_source, operateur_cible, date_demande, date_portage, statut, motif_rejet, type_portage, date_maj)
+  VALUES (staging.id_portage, staging.msisdn, staging.operateur_source, staging.operateur_cible, staging.date_demande, staging.date_portage, staging.statut, staging.motif_rejet, staging.type_portage, CURRENT_TIMESTAMP);

@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans comptes_financiers_histo (BigQuery)
+INSERT INTO £BQ_HISTO.comptes_financiers_histo (
+  id_ecriture,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'finance' AS id_ecriture,
+  CURRENT_DATE() AS date_agregat,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.comptes_financiers
+WHERE DATE(date_maj) = CURRENT_DATE();

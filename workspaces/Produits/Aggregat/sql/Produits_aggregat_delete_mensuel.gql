@@ -1,0 +1,3 @@
+-- Suppression des agrégats du mois courant avant recalcul (BigQuery)
+DELETE FROM £BQ_HISTO.produits_aggr_ventes_mensuel
+WHERE FORMAT_DATE('%Y%m', date_agregat) = FORMAT_DATE('%Y%m', CURRENT_DATE());

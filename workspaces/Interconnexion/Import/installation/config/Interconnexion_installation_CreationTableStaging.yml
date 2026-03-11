@@ -1,0 +1,13 @@
+script:
+  id_script: Interconnexion_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_interconnexion (TD)
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_interconnexion
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_interconnexion sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Interconnexion_installation_creation_table_staging.dql

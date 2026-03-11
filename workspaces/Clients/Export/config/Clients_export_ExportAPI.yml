@@ -1,0 +1,26 @@
+script:
+  id_script: Clients_Export_ExportAPI
+  description: Export du SOCLE clients vers l'API partenaire via extraction JSON
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.clients
+    REP_EXPORT: C:\data\clients\export
+    API_DEST: https://api.crm-partner.com/clients/push
+    NOM_FICHIER: clients_api_£DATETIME.json
+
+  jobs:
+    - job_id: job.table.extraction
+      description: Extrait le SOCLE clients en JSON
+      parametres:
+        Plateforme: BQ
+        TableSource: £TBL_SOCLE
+        Destination: £REP_EXPORT
+        NomFichier: £NOM_FICHIER
+        Format: json
+
+    - job_id: job.externe.export
+      description: Pousse le JSON vers l'API partenaire
+      parametres:
+        Source: £REP_EXPORT
+        Cible: £API_DEST
+        Type: api

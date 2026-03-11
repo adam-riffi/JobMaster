@@ -1,0 +1,25 @@
+-- Chargement des fichiers consommations dans la table staging Teradata
+INSERT INTO £TD_TMP.staging_cdr_voix (
+  id_cdr,
+  id_client,
+  date_appel,
+  heure_appel,
+  duree_secondes,
+  type_trafic,
+  zone,
+  montant,
+  operateur_transit,
+  date_maj
+)
+SELECT
+  id_cdr,
+  id_client,
+  date_appel,
+  heure_appel,
+  duree_secondes,
+  type_trafic,
+  zone,
+  montant,
+  operateur_transit,
+  date_maj
+FROM £TD_TMP.ext_staging_cdr_voix;

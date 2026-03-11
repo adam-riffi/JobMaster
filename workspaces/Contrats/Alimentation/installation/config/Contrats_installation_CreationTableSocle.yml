@@ -1,0 +1,13 @@
+script:
+  id_script: Contrats_Installation_CreationTableSocle
+  description: Création initiale de la table SOCLE contrats (BQ)
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.contrats
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table SOCLE contrats sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Contrats_installation_creation_table_socle.gql

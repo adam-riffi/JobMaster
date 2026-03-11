@@ -1,0 +1,23 @@
+script:
+  id_script: Portabilite_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique portabilite
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.portages
+    TBL_HISTO: £TD_HISTO.portages_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE portages
+          parametres:
+            Plateforme: TD
+            Requete: Portabilite_alimentation_upsert_socle.dql
+
+        - job_id: job.run.sql
+          description: Insert historique portages_histo
+          parametres:
+            Plateforme: TD
+            Requete: Portabilite_alimentation_insert_histo.dql

@@ -1,0 +1,20 @@
+script:
+  id_script: Produits_Import_ControleCSV
+  description: Validation structurelle des fichiers produits avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\produits\work
+    REP_ERR: C:\data\produits\erreur
+    MASQUE_PRODUITS: "^produits_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers produits
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_PRODUITS
+        Colonnes: "id_produit,libelle,type_produit,technologie,prix_ht,prix_ttc"
+        Separateur: ";"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

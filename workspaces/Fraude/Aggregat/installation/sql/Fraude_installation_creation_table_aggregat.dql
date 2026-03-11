@@ -1,0 +1,8 @@
+-- Création de la table agrégat fraude_aggr_mensuel_type (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_HISTO.fraude_aggr_mensuel_type (
+  periode                  VARCHAR(7)     NOT NULL,
+  nb_enregistrements       INTEGER,
+  cumul_12m                INTEGER,
+  date_calcul              TIMESTAMP
+)
+PRIMARY INDEX (periode);

@@ -1,0 +1,16 @@
+-- MERGE staging → SOCLE sites_reseau (Teradata)
+MERGE £TD_SOCLE.sites_reseau AS cible
+USING £TD_TMP.staging_sites_reseau AS staging
+ON cible.id_site = staging.id_site
+WHEN MATCHED THEN UPDATE SET
+    cible.code_site = staging.code_site,
+    cible.technologie = staging.technologie,
+    cible.region = staging.region,
+    cible.latitude = staging.latitude,
+    cible.longitude = staging.longitude,
+    cible.capacite_max_mo = staging.capacite_max_mo,
+    cible.trafic_actuel_mo = staging.trafic_actuel_mo,
+    cible.statut = staging.statut,
+    cible.date_maj = CURRENT_TIMESTAMP
+WHEN NOT MATCHED THEN INSERT (id_site, code_site, technologie, region, latitude, longitude, capacite_max_mo, trafic_actuel_mo, statut, date_maj)
+  VALUES (staging.id_site, staging.code_site, staging.technologie, staging.region, staging.latitude, staging.longitude, staging.capacite_max_mo, staging.trafic_actuel_mo, staging.statut, CURRENT_TIMESTAMP);

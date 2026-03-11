@@ -1,0 +1,18 @@
+script:
+  id_script: Produits_Export_ExtractionCSV
+  description: Extraction du SOCLE produits vers fichiers CSV datés
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.produits
+    REP_EXPORT: C:\data\produits\export
+    NOM_FICHIER: produits_£DATE.csv
+
+  jobs:
+    - job_id: job.table.extraction
+      description: Extrait la table produits en CSV
+      parametres:
+        Plateforme: BQ
+        TableSource: £TBL_SOCLE
+        Destination: £REP_EXPORT
+        NomFichier: £NOM_FICHIER
+        Format: csv

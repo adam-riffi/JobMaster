@@ -1,0 +1,20 @@
+script:
+  id_script: Paie_Import_ControleCSV
+  description: Validation structurelle des fichiers paie avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\paie\work
+    REP_ERR: C:\data\paie\erreur
+    MASQUE_PAIE: "^paie_\d{6}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers paie
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_PAIE
+        Colonnes: "id_paie,id_employe,periode,salaire_brut,cotisations_patronales,cotisations_salariales"
+        Separateur: ";"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

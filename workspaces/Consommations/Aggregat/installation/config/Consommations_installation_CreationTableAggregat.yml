@@ -1,0 +1,13 @@
+script:
+  id_script: Consommations_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat cdr_aggr_journalier_client (TD)
+
+  parametres_env:
+    TBL_AGGR: £TD_HISTO.cdr_aggr_journalier_client
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat cdr_aggr_journalier_client sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Consommations_installation_creation_table_aggregat.dql

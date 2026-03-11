@@ -1,0 +1,14 @@
+-- Création de la table SOCLE alertes_fraude (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_SOCLE.alertes_fraude (
+  id_alerte                           VARCHAR(36) NOT NULL,
+  id_client                           VARCHAR(20),
+  date_detection                      DATE,
+  type_fraude                         VARCHAR(50),
+  score_risque                        DECIMAL(5,2),
+  montant_suspect                     DECIMAL(12,2),
+  statut                              VARCHAR(20),
+  agent_investigation                 VARCHAR(50),
+  date_cloture                        DATE,
+  date_maj                            TIMESTAMP
+)
+PRIMARY INDEX (id_alerte);

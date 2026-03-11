@@ -1,0 +1,13 @@
+-- Agrégation mensuelle contrats_aggr_actifs_mensuel par segment (BigQuery)
+
+INSERT INTO £BQ_HISTO.contrats_aggr_actifs_mensuel (
+  periode,
+  nb_enregistrements,
+  date_calcul
+)
+SELECT
+  FORMAT_DATE('%Y%m', CURRENT_DATE()) AS periode,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_calcul
+FROM £BQ_SOCLE.contrats t
+WHERE DATE(t.date_maj) >= DATE_TRUNC(CURRENT_DATE(), MONTH);

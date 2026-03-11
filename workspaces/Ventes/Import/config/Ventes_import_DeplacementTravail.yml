@@ -1,0 +1,17 @@
+script:
+  id_script: Ventes_Import_DeplacementTravail
+  description: Déplacement des fichiers ventes de la zone d'entrée vers la zone de travail
+
+  parametres_env:
+    REP_IN: C:\data\ventes\in
+    REP_WORK: C:\data\ventes\work
+    MASQUE_VENTES: "^ventes_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.manipulation
+      description: Déplace les fichiers vers la zone de travail
+      parametres:
+        Source: £REP_IN
+        Cible: £REP_WORK
+        Masque: £MASQUE_VENTES
+        Mode: deplacement

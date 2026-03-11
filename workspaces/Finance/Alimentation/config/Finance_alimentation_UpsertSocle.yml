@@ -1,0 +1,33 @@
+script:
+  id_script: Finance_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE comptes_financiers depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_finance
+    TBL_SOCLE: £BQ_SOCLE.comptes_financiers
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: BQ
+        Requete: Finance_alimentation_check_staging.gql
+        Variable: FLAG_STAGING_FINANCE
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_FINANCE
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE comptes_financiers
+          parametres:
+            Plateforme: BQ
+            Requete: Finance_alimentation_upsert_socle.gql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier comptes_financiers
+          parametres:
+            Plateforme: BQ
+            Table: £TBL_SOCLE

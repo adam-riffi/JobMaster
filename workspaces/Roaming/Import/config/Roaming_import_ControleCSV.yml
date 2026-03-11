@@ -1,0 +1,20 @@
+script:
+  id_script: Roaming_Import_ControleCSV
+  description: Validation structurelle des fichiers roaming avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\roaming\work
+    REP_ERR: C:\data\roaming\erreur
+    MASQUE_ROAMING: "^roaming_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers roaming
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_ROAMING
+        Colonnes: "id_roaming,id_client,date_debut,pays,operateur_partenaire,type_trafic"
+        Separateur: "|"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

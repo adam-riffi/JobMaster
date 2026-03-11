@@ -1,0 +1,28 @@
+script:
+  id_script: Reporting_Aggregat_JournalierSocle
+  description: Agrégation journalière du SOCLE kpi_global vers l'historique
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.kpi_global
+    TBL_HISTO: £BQ_HISTO.kpi_global_histo
+    PERIODE: £DATE
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que le SOCLE a été alimenté aujourd'hui
+      parametres:
+        Plateforme: BQ
+        Requete: Reporting_aggregat_check_socle_jour.gql
+        Variable: FLAG_SOCLE_REPORTING
+
+    - job_id: job.conditionnelle.si
+      description: Agrège uniquement si le SOCLE est à jour
+      parametres:
+        Variable: FLAG_SOCLE_REPORTING
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: Insère les données du jour dans l'historique
+          parametres:
+            Plateforme: BQ
+            Requete: Reporting_aggregat_insert_journalier.gql

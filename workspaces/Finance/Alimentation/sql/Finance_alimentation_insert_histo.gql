@@ -1,0 +1,7 @@
+-- Insert historique journalier comptes_financiers_histo (BigQuery)
+INSERT INTO £BQ_HISTO.comptes_financiers_histo
+SELECT
+  s.id_ecriture, s.periode, s.rubrique, s.sous_rubrique, s.montant_debit, s.montant_credit, s.solde, s.devise, s.date_comptable,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.comptes_financiers s
+WHERE DATE(s.date_maj) = CURRENT_DATE();

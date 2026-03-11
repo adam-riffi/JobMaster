@@ -1,0 +1,18 @@
+-- MERGE staging → SOCLE ventes (BigQuery)
+MERGE £BQ_SOCLE.ventes AS cible
+USING £BQ_TMP.staging_ventes AS staging
+ON cible.id_vente = staging.id_vente
+WHEN MATCHED THEN
+  UPDATE SET
+    cible.id_client = staging.id_client,
+    cible.id_produit = staging.id_produit,
+    cible.id_commercial = staging.id_commercial,
+    cible.date_vente = staging.date_vente,
+    cible.canal = staging.canal,
+    cible.montant = staging.montant,
+    cible.commission = staging.commission,
+    cible.statut = staging.statut,
+    cible.date_maj = CURRENT_TIMESTAMP()
+WHEN NOT MATCHED THEN
+  INSERT (id_vente, id_client, id_produit, id_commercial, date_vente, canal, montant, commission, statut, date_maj)
+  VALUES (staging.id_vente, staging.id_client, staging.id_produit, staging.id_commercial, staging.date_vente, staging.canal, staging.montant, staging.commission, staging.statut, CURRENT_TIMESTAMP());

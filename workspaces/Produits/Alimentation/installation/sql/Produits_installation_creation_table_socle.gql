@@ -1,0 +1,12 @@
+-- Création de la table SOCLE produits (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_SOCLE.produits (
+  id_produit                          STRING NOT NULL
+  libelle                             STRING
+  type_produit                        STRING
+  technologie                         STRING
+  prix_ht                             NUMERIC
+  prix_ttc                            NUMERIC
+  actif                               BOOL
+  date_lancement                      DATE
+  date_maj                            TIMESTAMP
+);

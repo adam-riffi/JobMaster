@@ -1,0 +1,50 @@
+script:
+  id_script: Ventes_Import_TraitementBatch
+  description: Chargement en masse des fichiers ventes en staging puis archivage
+
+  parametres_env:
+    REP_WORK: C:\data\ventes\work
+    REP_ARCH: C:\data\ventes\archive
+    MASQUE_VENTES: "^ventes_\d{8}\.csv$"
+    TBL_STAGING: £BQ_TMP.staging_ventes
+
+  jobs:
+    - job_id: job.fichier.comptage
+      description: Compte les fichiers à traiter
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_VENTES
+        Variable: NB_FICHIERS_VENTES
+
+    - job_id: job.conditionnelle.si
+      description: Lance le batch uniquement si des fichiers sont présents
+      parametres:
+        Variable: NB_FICHIERS_VENTES
+        Valeur: "0"
+
+    - job_id: job.process.batch
+      description: Charge la staging depuis tous les fichiers puis archive
+      parametres:
+        Source: £REP_WORK
+        SAS: £REP_WORK
+        Archive: £REP_ARCH
+      jobs:
+        - job_id: job.run.sql
+          description: Charge les fichiers dans la table staging BQ
+          parametres:
+            Plateforme: BQ
+            Requete: Ventes_import_chargement_staging.gql
+
+        - job_id: job.fichier.manipulation
+          description: Archive les fichiers traités
+          parametres:
+            Source: £REP_WORK
+            Cible: £REP_ARCH
+            Masque: £MASQUE_VENTES
+            Mode: deplacement
+
+    - job_id: job.fichier.effacement
+      description: Purge les archives de plus de 3 mois
+      parametres:
+        Source: £REP_ARCH
+        Duree: 3

@@ -1,0 +1,12 @@
+-- Enrichissement transverse campagnes (BigQuery)
+-- Ce flux est TRANSVERSE : il emprunte des tables d'autres domaines.
+-- Référence cross-domaine : £BQ_SOCLE.clients (domaine Clients)
+LEFT JOIN £BQ_SOCLE.clients ext_clients ON t.id_campagne = ext_clients.id_campagne
+-- Référence cross-domaine : £TD_SOCLE.cdr_voix (domaine Consommations)
+LEFT JOIN £TD_SOCLE.cdr_voix ext_cdr_voix ON t.id_campagne = ext_cdr_voix.id_campagne
+-- Référence cross-domaine : £BQ_SOCLE.commandes (domaine Commandes)
+LEFT JOIN £BQ_SOCLE.commandes ext_commandes ON t.id_campagne = ext_commandes.id_campagne
+INSERT INTO £BQ_TMP.campagnes_enrichi
+SELECT
+  t.*
+FROM £BQ_SOCLE.campagnes t;

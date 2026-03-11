@@ -1,0 +1,7 @@
+-- Insert historique journalier kpi_global_histo (BigQuery)
+INSERT INTO £BQ_HISTO.kpi_global_histo
+SELECT
+  s.id_kpi, s.periode, s.domaine, s.indicateur, s.valeur, s.unite, s.date_calcul,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.kpi_global s
+WHERE DATE(s.date_maj) = CURRENT_DATE();

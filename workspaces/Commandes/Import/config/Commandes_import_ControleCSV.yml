@@ -1,0 +1,20 @@
+script:
+  id_script: Commandes_Import_ControleCSV
+  description: Validation structurelle des fichiers commandes avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\commandes\work
+    REP_ERR: C:\data\commandes\erreur
+    MASQUE_COMMANDES: "^commandes_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers commandes
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_COMMANDES
+        Colonnes: "id_commande,id_client,id_produit,date_commande,statut,canal_vente"
+        Separateur: ";"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

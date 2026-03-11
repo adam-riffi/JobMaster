@@ -1,0 +1,23 @@
+script:
+  id_script: Ventes_Alimentation_EnrichissementTransverse
+  description: Enrichissement du SOCLE ventes avec données cross-domaine via transfert
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.ventes
+    TBL_TMP_ENRICHI: £BQ_TMP.ventes_enrichi
+
+  jobs:
+    - job_id: job.run.sql
+      description: Prépare la table enrichie en croisant avec données transverses
+      parametres:
+        Plateforme: BQ
+        Requete: Ventes_alimentation_enrichissement_transverse.gql
+
+    - job_id: job.run.transfert
+      description: Transfère les données enrichies vers la plateforme cible
+      parametres:
+        PlateformeSource: BQ
+        TableSource: £TBL_TMP_ENRICHI
+        PlateformeCible: TD
+        TableCible: £TD_TMP.ventes_enrichi_sync
+        Mode: FULL

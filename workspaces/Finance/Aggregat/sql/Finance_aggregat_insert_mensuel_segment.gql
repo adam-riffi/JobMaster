@@ -1,0 +1,21 @@
+-- Agrégation mensuelle finance_aggr_mensuel_rubrique par segment (BigQuery)
+
+-- Flux transverse : jointures avec tables d'autres domaines
+-- Référence cross-domaine : £BQ_SOCLE.factures (domaine Facturation)
+LEFT JOIN £BQ_SOCLE.factures ext_factures ON t.id_ecriture = ext_factures.id_ecriture
+-- Référence cross-domaine : £BQ_SOCLE.paiements (domaine Paiements)
+LEFT JOIN £BQ_SOCLE.paiements ext_paiements ON t.id_ecriture = ext_paiements.id_ecriture
+-- Référence cross-domaine : £TD_SOCLE.creances (domaine Recouvrement)
+LEFT JOIN £TD_SOCLE.creances ext_creances ON t.id_ecriture = ext_creances.id_ecriture
+
+INSERT INTO £BQ_HISTO.finance_aggr_mensuel_rubrique (
+  periode,
+  nb_enregistrements,
+  date_calcul
+)
+SELECT
+  FORMAT_DATE('%Y%m', CURRENT_DATE()) AS periode,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_calcul
+FROM £BQ_SOCLE.comptes_financiers t
+WHERE DATE(t.date_maj) >= DATE_TRUNC(CURRENT_DATE(), MONTH);

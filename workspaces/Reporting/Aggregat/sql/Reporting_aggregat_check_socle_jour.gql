@@ -1,0 +1,4 @@
+-- Vérification que le SOCLE kpi_global a été mis à jour aujourd'hui
+SELECT IF(COUNT(*) > 0, 'OUI', 'NON')
+FROM £BQ_SOCLE.kpi_global
+WHERE DATE(date_maj) = CURRENT_DATE();

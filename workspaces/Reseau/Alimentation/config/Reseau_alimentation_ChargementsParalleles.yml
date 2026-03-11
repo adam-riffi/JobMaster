@@ -1,0 +1,23 @@
+script:
+  id_script: Reseau_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique reseau
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.sites_reseau
+    TBL_HISTO: £TD_HISTO.sites_reseau_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE sites_reseau
+          parametres:
+            Plateforme: TD
+            Requete: Reseau_alimentation_upsert_socle.dql
+
+        - job_id: job.run.sql
+          description: Insert historique sites_reseau_histo
+          parametres:
+            Plateforme: TD
+            Requete: Reseau_alimentation_insert_histo.dql

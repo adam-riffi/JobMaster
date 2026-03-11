@@ -1,0 +1,13 @@
+-- Agrégation mensuelle paie_aggr_mensuel_direction par segment (Teradata)
+
+INSERT INTO £TD_HISTO.paie_aggr_mensuel_direction (
+  periode,
+  nb_enregistrements,
+  date_calcul
+)
+SELECT
+  TO_CHAR(CURRENT_DATE, 'YYYYMM') AS periode,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP AS date_calcul
+FROM £TD_SOCLE.paie_employes t
+WHERE CAST(t.date_maj AS DATE) >= (CURRENT_DATE - EXTRACT(DAY FROM CURRENT_DATE) + 1);

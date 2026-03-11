@@ -1,0 +1,20 @@
+script:
+  id_script: ServiceClient_Import_ControleCSV
+  description: Validation structurelle des fichiers serviceclient avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\service_client\work
+    REP_ERR: C:\data\service_client\erreur
+    MASQUE_SERVICECLIENT: "^interactions_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers serviceclient
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_SERVICECLIENT
+        Colonnes: "id_interaction,id_client,date_interaction,canal_contact,motif,statut"
+        Separateur: ";"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

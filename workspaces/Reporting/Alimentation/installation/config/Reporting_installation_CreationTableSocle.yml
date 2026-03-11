@@ -1,0 +1,13 @@
+script:
+  id_script: Reporting_Installation_CreationTableSocle
+  description: Création initiale de la table SOCLE kpi_global (BQ)
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.kpi_global
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table SOCLE kpi_global sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Reporting_installation_creation_table_socle.gql

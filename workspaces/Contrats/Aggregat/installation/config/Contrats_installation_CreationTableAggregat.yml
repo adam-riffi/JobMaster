@@ -1,0 +1,13 @@
+script:
+  id_script: Contrats_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat contrats_aggr_actifs_mensuel (BQ)
+
+  parametres_env:
+    TBL_AGGR: £BQ_HISTO.contrats_aggr_actifs_mensuel
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat contrats_aggr_actifs_mensuel sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Contrats_installation_creation_table_aggregat.gql

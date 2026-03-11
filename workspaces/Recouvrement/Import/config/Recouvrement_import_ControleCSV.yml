@@ -1,0 +1,20 @@
+script:
+  id_script: Recouvrement_Import_ControleCSV
+  description: Validation structurelle des fichiers recouvrement avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\recouvrement\work
+    REP_ERR: C:\data\recouvrement\erreur
+    MASQUE_RECOUVREMENT: "^creances_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers recouvrement
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_RECOUVREMENT
+        Colonnes: "id_creance,id_client,id_facture,date_echeance,montant_du,montant_recouvre"
+        Separateur: "|"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

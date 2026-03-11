@@ -1,0 +1,21 @@
+script:
+  id_script: Paie_Aggregat_MensuelParSegment
+  description: Agrégation mensuelle du SOCLE paie_employes par segment métier
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.paie_employes
+    TBL_AGGR: £TD_HISTO.paie_aggr_mensuel_direction
+    PERIODE: £YEAR£MONTH
+
+  jobs:
+    - job_id: job.run.sql
+      description: Supprime les agrégats du mois courant avant recalcul
+      parametres:
+        Plateforme: TD
+        Requete: Paie_aggregat_delete_mensuel.dql
+
+    - job_id: job.run.sql
+      description: Calcule et insère les agrégats mensuels par segment
+      parametres:
+        Plateforme: TD
+        Requete: Paie_aggregat_insert_mensuel_segment.dql

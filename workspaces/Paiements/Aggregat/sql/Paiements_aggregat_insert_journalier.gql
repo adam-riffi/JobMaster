@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans paiements_histo (BigQuery)
+INSERT INTO £BQ_HISTO.paiements_histo (
+  id_paiement,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'paiements' AS id_paiement,
+  CURRENT_DATE() AS date_agregat,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.paiements
+WHERE DATE(date_maj) = CURRENT_DATE();

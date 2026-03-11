@@ -1,0 +1,33 @@
+script:
+  id_script: Interconnexion_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE interconnexion depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_interconnexion
+    TBL_SOCLE: £TD_SOCLE.interconnexion
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: TD
+        Requete: Interconnexion_alimentation_check_staging.dql
+        Variable: FLAG_STAGING_INTERCONNEXION
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_INTERCONNEXION
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE interconnexion
+          parametres:
+            Plateforme: TD
+            Requete: Interconnexion_alimentation_upsert_socle.dql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier interconnexion
+          parametres:
+            Plateforme: TD
+            Table: £TBL_SOCLE

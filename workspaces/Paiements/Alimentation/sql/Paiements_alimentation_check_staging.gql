@@ -1,0 +1,4 @@
+-- Vérifie si la staging staging_paiements contient des lignes aujourd'hui
+SELECT IF(COUNT(*) > 0, 'OUI', 'NON')
+FROM £BQ_TMP.staging_paiements
+WHERE DATE(date_maj) = CURRENT_DATE();

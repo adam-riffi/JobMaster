@@ -1,0 +1,14 @@
+-- Création de la table staging staging_roaming (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_TMP.staging_roaming (
+  id_roaming                          VARCHAR(36) NOT NULL,
+  id_client                           VARCHAR(20),
+  date_debut                          DATE,
+  pays                                VARCHAR(50),
+  operateur_partenaire                VARCHAR(100),
+  type_trafic                         VARCHAR(10),
+  volume_mo                           DECIMAL(12,3),
+  duree_secondes                      INTEGER,
+  cout_euros                          DECIMAL(10,4),
+  date_maj                            TIMESTAMP
+)
+PRIMARY INDEX (id_roaming);

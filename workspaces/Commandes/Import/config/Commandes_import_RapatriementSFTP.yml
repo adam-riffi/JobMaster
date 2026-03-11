@@ -1,0 +1,15 @@
+script:
+  id_script: Commandes_Import_RapatriementSFTP
+  description: Rapatriement des fichiers commandes depuis le SFTP source vers la zone d'entrée
+
+  parametres_env:
+    SFTP_SOURCE: sftp://order-system/commandes/in
+    REP_IN: C:\data\commandes\in
+
+  jobs:
+    - job_id: job.externe.import
+      description: Récupère les fichiers commandes depuis le SFTP
+      parametres:
+        Source: £SFTP_SOURCE
+        Cible: £REP_IN
+        Type: sftp

@@ -1,0 +1,16 @@
+-- MERGE staging → SOCLE interconnexion (Teradata)
+MERGE £TD_SOCLE.interconnexion AS cible
+USING £TD_TMP.staging_interconnexion AS staging
+ON cible.id_interconnexion = staging.id_interconnexion
+WHEN MATCHED THEN UPDATE SET
+    cible.operateur_source = staging.operateur_source,
+    cible.operateur_cible = staging.operateur_cible,
+    cible.date_transit = staging.date_transit,
+    cible.type_trafic = staging.type_trafic,
+    cible.volume_minutes = staging.volume_minutes,
+    cible.tarif_minute = staging.tarif_minute,
+    cible.montant_total = staging.montant_total,
+    cible.statut_facturation = staging.statut_facturation,
+    cible.date_maj = CURRENT_TIMESTAMP
+WHEN NOT MATCHED THEN INSERT (id_interconnexion, operateur_source, operateur_cible, date_transit, type_trafic, volume_minutes, tarif_minute, montant_total, statut_facturation, date_maj)
+  VALUES (staging.id_interconnexion, staging.operateur_source, staging.operateur_cible, staging.date_transit, staging.type_trafic, staging.volume_minutes, staging.tarif_minute, staging.montant_total, staging.statut_facturation, CURRENT_TIMESTAMP);

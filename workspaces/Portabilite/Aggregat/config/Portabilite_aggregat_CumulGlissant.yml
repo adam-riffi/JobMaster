@@ -1,0 +1,14 @@
+script:
+  id_script: Portabilite_Aggregat_CumulGlissant
+  description: Calcul des cumuls glissants sur 12 mois pour le domaine portabilite
+
+  parametres_env:
+    TBL_HISTO: £TD_HISTO.portages_histo
+    TBL_AGGR: £TD_HISTO.portabilite_aggr_mensuel_operateur
+
+  jobs:
+    - job_id: job.run.sql
+      description: Recalcule le cumul glissant 12 mois
+      parametres:
+        Plateforme: TD
+        Requete: Portabilite_aggregat_cumul_glissant_12m.dql

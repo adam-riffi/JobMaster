@@ -1,0 +1,14 @@
+script:
+  id_script: Equipements_Aggregat_CumulGlissant
+  description: Calcul des cumuls glissants sur 12 mois pour le domaine equipements
+
+  parametres_env:
+    TBL_HISTO: £TD_HISTO.equipements_histo
+    TBL_AGGR: £TD_HISTO.equipements_aggr_parc_mensuel
+
+  jobs:
+    - job_id: job.run.sql
+      description: Recalcule le cumul glissant 12 mois
+      parametres:
+        Plateforme: TD
+        Requete: Equipements_aggregat_cumul_glissant_12m.dql

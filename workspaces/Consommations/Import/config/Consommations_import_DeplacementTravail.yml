@@ -1,0 +1,17 @@
+script:
+  id_script: Consommations_Import_DeplacementTravail
+  description: Déplacement des fichiers consommations de la zone d'entrée vers la zone de travail
+
+  parametres_env:
+    REP_IN: C:\data\consommations\in
+    REP_WORK: C:\data\consommations\work
+    MASQUE_CONSOMMATIONS: "^cdr_voix_\d{8}\.csv\.gz$"
+
+  jobs:
+    - job_id: job.fichier.manipulation
+      description: Déplace les fichiers vers la zone de travail
+      parametres:
+        Source: £REP_IN
+        Cible: £REP_WORK
+        Masque: £MASQUE_CONSOMMATIONS
+        Mode: deplacement

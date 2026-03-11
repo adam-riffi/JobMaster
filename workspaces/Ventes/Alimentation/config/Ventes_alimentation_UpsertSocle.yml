@@ -1,0 +1,33 @@
+script:
+  id_script: Ventes_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE ventes depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_ventes
+    TBL_SOCLE: £BQ_SOCLE.ventes
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: BQ
+        Requete: Ventes_alimentation_check_staging.gql
+        Variable: FLAG_STAGING_VENTES
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_VENTES
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE ventes
+          parametres:
+            Plateforme: BQ
+            Requete: Ventes_alimentation_upsert_socle.gql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier ventes
+          parametres:
+            Plateforme: BQ
+            Table: £TBL_SOCLE

@@ -1,0 +1,16 @@
+-- MERGE staging → SOCLE alertes_fraude (Teradata)
+MERGE £TD_SOCLE.alertes_fraude AS cible
+USING £TD_TMP.staging_alertes_fraude AS staging
+ON cible.id_alerte = staging.id_alerte
+WHEN MATCHED THEN UPDATE SET
+    cible.id_client = staging.id_client,
+    cible.date_detection = staging.date_detection,
+    cible.type_fraude = staging.type_fraude,
+    cible.score_risque = staging.score_risque,
+    cible.montant_suspect = staging.montant_suspect,
+    cible.statut = staging.statut,
+    cible.agent_investigation = staging.agent_investigation,
+    cible.date_cloture = staging.date_cloture,
+    cible.date_maj = CURRENT_TIMESTAMP
+WHEN NOT MATCHED THEN INSERT (id_alerte, id_client, date_detection, type_fraude, score_risque, montant_suspect, statut, agent_investigation, date_cloture, date_maj)
+  VALUES (staging.id_alerte, staging.id_client, staging.date_detection, staging.type_fraude, staging.score_risque, staging.montant_suspect, staging.statut, staging.agent_investigation, staging.date_cloture, CURRENT_TIMESTAMP);

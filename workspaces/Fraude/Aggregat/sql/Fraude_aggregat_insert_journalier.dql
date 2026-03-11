@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans alertes_fraude_histo (Teradata)
+INSERT INTO £TD_HISTO.alertes_fraude_histo (
+  id_alerte,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'fraude',
+  CURRENT_DATE,
+  COUNT(*),
+  CURRENT_TIMESTAMP
+FROM £TD_SOCLE.alertes_fraude
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

@@ -1,0 +1,33 @@
+script:
+  id_script: Paie_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE paie_employes depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_paie
+    TBL_SOCLE: £TD_SOCLE.paie_employes
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: TD
+        Requete: Paie_alimentation_check_staging.dql
+        Variable: FLAG_STAGING_PAIE
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_PAIE
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE paie_employes
+          parametres:
+            Plateforme: TD
+            Requete: Paie_alimentation_upsert_socle.dql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier paie_employes
+          parametres:
+            Plateforme: TD
+            Table: £TBL_SOCLE

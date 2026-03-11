@@ -1,0 +1,13 @@
+-- Création de la table SOCLE comptes_financiers (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_SOCLE.comptes_financiers (
+  id_ecriture                         STRING NOT NULL
+  periode                             STRING
+  rubrique                            STRING
+  sous_rubrique                       STRING
+  montant_debit                       NUMERIC
+  montant_credit                      NUMERIC
+  solde                               NUMERIC
+  devise                              STRING
+  date_comptable                      DATE
+  date_maj                            TIMESTAMP
+);

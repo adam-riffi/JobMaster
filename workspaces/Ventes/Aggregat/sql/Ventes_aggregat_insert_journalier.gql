@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans ventes_histo (BigQuery)
+INSERT INTO £BQ_HISTO.ventes_histo (
+  id_vente,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'ventes' AS id_vente,
+  CURRENT_DATE() AS date_agregat,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.ventes
+WHERE DATE(date_maj) = CURRENT_DATE();

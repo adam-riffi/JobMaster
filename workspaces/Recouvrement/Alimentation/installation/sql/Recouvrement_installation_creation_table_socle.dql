@@ -1,0 +1,14 @@
+-- Création de la table SOCLE creances (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_SOCLE.creances (
+  id_creance                          VARCHAR(36) NOT NULL,
+  id_client                           VARCHAR(20),
+  id_facture                          VARCHAR(36),
+  date_echeance                       DATE,
+  montant_du                          DECIMAL(12,2),
+  montant_recouvre                    DECIMAL(12,2),
+  nb_relances                         INTEGER,
+  statut                              VARCHAR(30),
+  date_contentieux                    DATE,
+  date_maj                            TIMESTAMP
+)
+PRIMARY INDEX (id_creance);

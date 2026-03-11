@@ -1,0 +1,13 @@
+script:
+  id_script: Ventes_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_ventes (BQ)
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_ventes
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_ventes sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Ventes_installation_creation_table_staging.gql

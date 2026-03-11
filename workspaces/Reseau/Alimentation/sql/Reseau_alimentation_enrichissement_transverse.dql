@@ -1,0 +1,10 @@
+-- Enrichissement transverse sites_reseau (Teradata)
+-- Ce flux est TRANSVERSE : il emprunte des tables d'autres domaines.
+-- Référence cross-domaine : £TD_SOCLE.incidents (domaine Incidents)
+LEFT JOIN £TD_SOCLE.incidents ext_incidents ON t.id_site = ext_incidents.id_site
+-- Référence cross-domaine : £TD_SOCLE.equipements (domaine Equipements)
+LEFT JOIN £TD_SOCLE.equipements ext_equipements ON t.id_site = ext_equipements.id_site
+INSERT INTO £TD_TMP.sites_reseau_enrichi
+SELECT
+  t.*
+FROM £TD_SOCLE.sites_reseau t;

@@ -1,0 +1,13 @@
+-- Création de la table staging staging_paiements (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_TMP.staging_paiements (
+  id_paiement                         STRING NOT NULL
+  id_facture                          STRING
+  id_client                           STRING
+  date_paiement                       DATE
+  montant                             NUMERIC
+  mode_paiement                       STRING
+  statut                              STRING
+  reference_bancaire                  STRING
+  date_maj                            TIMESTAMP
+)
+OPTIONS (expiration_timestamp = NULL);

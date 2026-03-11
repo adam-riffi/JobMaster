@@ -1,0 +1,14 @@
+script:
+  id_script: Produits_Aggregat_CumulGlissant
+  description: Calcul des cumuls glissants sur 12 mois pour le domaine produits
+
+  parametres_env:
+    TBL_HISTO: £BQ_HISTO.produits_histo
+    TBL_AGGR: £BQ_HISTO.produits_aggr_ventes_mensuel
+
+  jobs:
+    - job_id: job.run.sql
+      description: Recalcule le cumul glissant 12 mois
+      parametres:
+        Plateforme: BQ
+        Requete: Produits_aggregat_cumul_glissant_12m.gql

@@ -1,0 +1,14 @@
+-- Création de la table staging staging_finance (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_TMP.staging_finance (
+  id_ecriture                         STRING NOT NULL
+  periode                             STRING
+  rubrique                            STRING
+  sous_rubrique                       STRING
+  montant_debit                       NUMERIC
+  montant_credit                      NUMERIC
+  solde                               NUMERIC
+  devise                              STRING
+  date_comptable                      DATE
+  date_maj                            TIMESTAMP
+)
+OPTIONS (expiration_timestamp = NULL);

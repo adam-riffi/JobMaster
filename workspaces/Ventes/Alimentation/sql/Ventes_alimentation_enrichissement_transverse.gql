@@ -1,0 +1,10 @@
+-- Enrichissement transverse ventes (BigQuery)
+-- Ce flux est TRANSVERSE : il emprunte des tables d'autres domaines.
+-- Référence cross-domaine : £BQ_SOCLE.clients (domaine Clients)
+LEFT JOIN £BQ_SOCLE.clients ext_clients ON t.id_vente = ext_clients.id_vente
+-- Référence cross-domaine : £BQ_SOCLE.produits (domaine Produits)
+LEFT JOIN £BQ_SOCLE.produits ext_produits ON t.id_vente = ext_produits.id_vente
+INSERT INTO £BQ_TMP.ventes_enrichi
+SELECT
+  t.*
+FROM £BQ_SOCLE.ventes t;

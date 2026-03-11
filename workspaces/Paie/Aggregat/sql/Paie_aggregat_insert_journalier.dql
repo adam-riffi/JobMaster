@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans paie_histo (Teradata)
+INSERT INTO £TD_HISTO.paie_histo (
+  id_paie,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'paie',
+  CURRENT_DATE,
+  COUNT(*),
+  CURRENT_TIMESTAMP
+FROM £TD_SOCLE.paie_employes
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

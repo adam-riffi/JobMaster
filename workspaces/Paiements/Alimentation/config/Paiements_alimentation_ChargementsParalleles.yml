@@ -1,0 +1,23 @@
+script:
+  id_script: Paiements_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique paiements
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.paiements
+    TBL_HISTO: £BQ_HISTO.paiements_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE paiements
+          parametres:
+            Plateforme: BQ
+            Requete: Paiements_alimentation_upsert_socle.gql
+
+        - job_id: job.run.sql
+          description: Insert historique paiements_histo
+          parametres:
+            Plateforme: BQ
+            Requete: Paiements_alimentation_insert_histo.gql

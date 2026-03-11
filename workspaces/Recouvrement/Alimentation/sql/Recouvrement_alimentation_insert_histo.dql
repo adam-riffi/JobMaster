@@ -1,0 +1,7 @@
+-- Insert historique journalier creances_histo (Teradata)
+INSERT INTO £TD_HISTO.creances_histo
+SELECT
+  s.id_creance, s.id_client, s.id_facture, s.date_echeance, s.montant_du, s.montant_recouvre, s.nb_relances, s.statut, s.date_contentieux,
+  CURRENT_TIMESTAMP AS date_maj
+FROM £TD_SOCLE.creances s
+WHERE CAST(s.date_maj AS DATE) = CURRENT_DATE;

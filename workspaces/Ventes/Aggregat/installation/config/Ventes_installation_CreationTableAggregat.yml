@@ -1,0 +1,13 @@
+script:
+  id_script: Ventes_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat ventes_aggr_mensuel_canal (BQ)
+
+  parametres_env:
+    TBL_AGGR: £BQ_HISTO.ventes_aggr_mensuel_canal
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat ventes_aggr_mensuel_canal sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Ventes_installation_creation_table_aggregat.gql

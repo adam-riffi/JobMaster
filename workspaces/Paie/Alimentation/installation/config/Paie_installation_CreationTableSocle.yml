@@ -1,0 +1,13 @@
+script:
+  id_script: Paie_Installation_CreationTableSocle
+  description: Création initiale de la table SOCLE paie_employes (TD)
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.paie_employes
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table SOCLE paie_employes sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Paie_installation_creation_table_socle.dql

@@ -1,0 +1,25 @@
+-- Chargement des fichiers recouvrement dans la table staging Teradata
+INSERT INTO £TD_TMP.staging_creances (
+  id_creance,
+  id_client,
+  id_facture,
+  date_echeance,
+  montant_du,
+  montant_recouvre,
+  nb_relances,
+  statut,
+  date_contentieux,
+  date_maj
+)
+SELECT
+  id_creance,
+  id_client,
+  id_facture,
+  date_echeance,
+  montant_du,
+  montant_recouvre,
+  nb_relances,
+  statut,
+  date_contentieux,
+  date_maj
+FROM £TD_TMP.ext_staging_creances;

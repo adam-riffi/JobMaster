@@ -1,0 +1,25 @@
+-- Chargement des fichiers fraude dans la table staging Teradata
+INSERT INTO £TD_TMP.staging_alertes_fraude (
+  id_alerte,
+  id_client,
+  date_detection,
+  type_fraude,
+  score_risque,
+  montant_suspect,
+  statut,
+  agent_investigation,
+  date_cloture,
+  date_maj
+)
+SELECT
+  id_alerte,
+  id_client,
+  date_detection,
+  type_fraude,
+  score_risque,
+  montant_suspect,
+  statut,
+  agent_investigation,
+  date_cloture,
+  date_maj
+FROM £TD_TMP.ext_staging_alertes_fraude;

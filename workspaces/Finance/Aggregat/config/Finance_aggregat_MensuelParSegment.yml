@@ -1,0 +1,21 @@
+script:
+  id_script: Finance_Aggregat_MensuelParSegment
+  description: Agrégation mensuelle du SOCLE comptes_financiers par segment métier
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.comptes_financiers
+    TBL_AGGR: £BQ_HISTO.finance_aggr_mensuel_rubrique
+    PERIODE: £YEAR£MONTH
+
+  jobs:
+    - job_id: job.run.sql
+      description: Supprime les agrégats du mois courant avant recalcul
+      parametres:
+        Plateforme: BQ
+        Requete: Finance_aggregat_delete_mensuel.gql
+
+    - job_id: job.run.sql
+      description: Calcule et insère les agrégats mensuels par segment
+      parametres:
+        Plateforme: BQ
+        Requete: Finance_aggregat_insert_mensuel_segment.gql

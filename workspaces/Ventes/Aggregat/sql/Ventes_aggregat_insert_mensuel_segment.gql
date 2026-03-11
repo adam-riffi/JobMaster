@@ -1,0 +1,19 @@
+-- Agrégation mensuelle ventes_aggr_mensuel_canal par segment (BigQuery)
+
+-- Flux transverse : jointures avec tables d'autres domaines
+-- Référence cross-domaine : £BQ_SOCLE.clients (domaine Clients)
+LEFT JOIN £BQ_SOCLE.clients ext_clients ON t.id_vente = ext_clients.id_vente
+-- Référence cross-domaine : £BQ_SOCLE.produits (domaine Produits)
+LEFT JOIN £BQ_SOCLE.produits ext_produits ON t.id_vente = ext_produits.id_vente
+
+INSERT INTO £BQ_HISTO.ventes_aggr_mensuel_canal (
+  periode,
+  nb_enregistrements,
+  date_calcul
+)
+SELECT
+  FORMAT_DATE('%Y%m', CURRENT_DATE()) AS periode,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_calcul
+FROM £BQ_SOCLE.ventes t
+WHERE DATE(t.date_maj) >= DATE_TRUNC(CURRENT_DATE(), MONTH);

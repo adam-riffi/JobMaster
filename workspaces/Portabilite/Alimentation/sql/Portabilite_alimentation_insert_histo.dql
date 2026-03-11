@@ -1,0 +1,7 @@
+-- Insert historique journalier portages_histo (Teradata)
+INSERT INTO £TD_HISTO.portages_histo
+SELECT
+  s.id_portage, s.msisdn, s.operateur_source, s.operateur_cible, s.date_demande, s.date_portage, s.statut, s.motif_rejet, s.type_portage,
+  CURRENT_TIMESTAMP AS date_maj
+FROM £TD_SOCLE.portages s
+WHERE CAST(s.date_maj AS DATE) = CURRENT_DATE;

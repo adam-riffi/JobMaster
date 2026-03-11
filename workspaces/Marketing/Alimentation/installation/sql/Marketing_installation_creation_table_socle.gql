@@ -1,0 +1,13 @@
+-- Création de la table SOCLE campagnes (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_SOCLE.campagnes (
+  id_campagne                         STRING NOT NULL
+  code_segment                        STRING
+  libelle                             STRING
+  canal                               STRING
+  date_debut                          DATE
+  date_fin                            DATE
+  budget                              NUMERIC
+  nb_cibles                           INT64
+  taux_conversion                     FLOAT64
+  date_maj                            TIMESTAMP
+);

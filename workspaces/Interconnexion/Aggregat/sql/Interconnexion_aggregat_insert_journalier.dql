@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans interconnexion_histo (Teradata)
+INSERT INTO £TD_HISTO.interconnexion_histo (
+  id_interconnexion,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'interconnexion',
+  CURRENT_DATE,
+  COUNT(*),
+  CURRENT_TIMESTAMP
+FROM £TD_SOCLE.interconnexion
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

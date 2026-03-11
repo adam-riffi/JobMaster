@@ -1,0 +1,14 @@
+-- Création de la table SOCLE interconnexion (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_SOCLE.interconnexion (
+  id_interconnexion                   VARCHAR(36) NOT NULL,
+  operateur_source                    VARCHAR(50),
+  operateur_cible                     VARCHAR(50),
+  date_transit                        DATE,
+  type_trafic                         VARCHAR(10),
+  volume_minutes                      DECIMAL(12,2),
+  tarif_minute                        DECIMAL(8,6),
+  montant_total                       DECIMAL(12,2),
+  statut_facturation                  VARCHAR(20),
+  date_maj                            TIMESTAMP
+)
+PRIMARY INDEX (id_interconnexion);

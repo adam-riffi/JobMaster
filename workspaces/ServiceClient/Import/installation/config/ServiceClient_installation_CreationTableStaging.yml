@@ -1,0 +1,13 @@
+script:
+  id_script: ServiceClient_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_interactions (BQ)
+
+  parametres_env:
+    TBL_STAGING: £BQ_TMP.staging_interactions
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_interactions sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: ServiceClient_installation_creation_table_staging.gql

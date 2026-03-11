@@ -1,0 +1,7 @@
+-- Insert historique journalier campagnes_histo (BigQuery)
+INSERT INTO £BQ_HISTO.campagnes_histo
+SELECT
+  s.id_campagne, s.code_segment, s.libelle, s.canal, s.date_debut, s.date_fin, s.budget, s.nb_cibles, s.taux_conversion,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.campagnes s
+WHERE DATE(s.date_maj) = CURRENT_DATE();

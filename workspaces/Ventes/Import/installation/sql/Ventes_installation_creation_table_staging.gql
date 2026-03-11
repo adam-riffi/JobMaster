@@ -1,0 +1,14 @@
+-- Création de la table staging staging_ventes (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_TMP.staging_ventes (
+  id_vente                            STRING NOT NULL
+  id_client                           STRING
+  id_produit                          STRING
+  id_commercial                       STRING
+  date_vente                          DATE
+  canal                               STRING
+  montant                             NUMERIC
+  commission                          NUMERIC
+  statut                              STRING
+  date_maj                            TIMESTAMP
+)
+OPTIONS (expiration_timestamp = NULL);

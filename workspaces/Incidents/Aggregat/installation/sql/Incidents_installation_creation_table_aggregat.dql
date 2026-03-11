@@ -1,0 +1,8 @@
+-- Création de la table agrégat incidents_aggr_journalier_severite (Teradata)
+CREATE TABLE IF NOT EXISTS £TD_HISTO.incidents_aggr_journalier_severite (
+  periode                  VARCHAR(7)     NOT NULL,
+  nb_enregistrements       INTEGER,
+  cumul_12m                INTEGER,
+  date_calcul              TIMESTAMP
+)
+PRIMARY INDEX (periode);

@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans commandes_histo (BigQuery)
+INSERT INTO £BQ_HISTO.commandes_histo (
+  id_commande,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'commandes' AS id_commande,
+  CURRENT_DATE() AS date_agregat,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.commandes
+WHERE DATE(date_maj) = CURRENT_DATE();

@@ -1,0 +1,7 @@
+-- Insert historique journalier roaming_histo (Teradata)
+INSERT INTO £TD_HISTO.roaming_histo
+SELECT
+  s.id_roaming, s.id_client, s.date_debut, s.pays, s.operateur_partenaire, s.type_trafic, s.volume_mo, s.duree_secondes, s.cout_euros,
+  CURRENT_TIMESTAMP AS date_maj
+FROM £TD_SOCLE.roaming s
+WHERE CAST(s.date_maj AS DATE) = CURRENT_DATE;

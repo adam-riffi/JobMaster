@@ -1,0 +1,16 @@
+-- MERGE staging → SOCLE kpi_global (BigQuery)
+MERGE £BQ_SOCLE.kpi_global AS cible
+USING £BQ_TMP.staging_kpi_global AS staging
+ON cible.id_kpi = staging.id_kpi
+WHEN MATCHED THEN
+  UPDATE SET
+    cible.periode = staging.periode,
+    cible.domaine = staging.domaine,
+    cible.indicateur = staging.indicateur,
+    cible.valeur = staging.valeur,
+    cible.unite = staging.unite,
+    cible.date_calcul = staging.date_calcul,
+    cible.date_maj = CURRENT_TIMESTAMP()
+WHEN NOT MATCHED THEN
+  INSERT (id_kpi, periode, domaine, indicateur, valeur, unite, date_calcul, date_maj)
+  VALUES (staging.id_kpi, staging.periode, staging.domaine, staging.indicateur, staging.valeur, staging.unite, staging.date_calcul, CURRENT_TIMESTAMP());

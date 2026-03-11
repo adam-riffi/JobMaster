@@ -1,0 +1,17 @@
+-- MERGE staging → SOCLE clients (BigQuery)
+MERGE £BQ_SOCLE.clients AS cible
+USING £BQ_TMP.staging_clients AS staging
+ON cible.id_client = staging.id_client
+WHEN MATCHED THEN
+  UPDATE SET
+    cible.nom = staging.nom,
+    cible.prenom = staging.prenom,
+    cible.email = staging.email,
+    cible.telephone = staging.telephone,
+    cible.date_naissance = staging.date_naissance,
+    cible.segment = staging.segment,
+    cible.statut = staging.statut,
+    cible.date_maj = CURRENT_TIMESTAMP()
+WHEN NOT MATCHED THEN
+  INSERT (id_client, nom, prenom, email, telephone, date_naissance, segment, statut, date_maj)
+  VALUES (staging.id_client, staging.nom, staging.prenom, staging.email, staging.telephone, staging.date_naissance, staging.segment, staging.statut, CURRENT_TIMESTAMP());

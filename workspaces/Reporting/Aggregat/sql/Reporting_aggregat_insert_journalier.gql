@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans kpi_global_histo (BigQuery)
+INSERT INTO £BQ_HISTO.kpi_global_histo (
+  id_kpi,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'reporting' AS id_kpi,
+  CURRENT_DATE() AS date_agregat,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.kpi_global
+WHERE DATE(date_maj) = CURRENT_DATE();

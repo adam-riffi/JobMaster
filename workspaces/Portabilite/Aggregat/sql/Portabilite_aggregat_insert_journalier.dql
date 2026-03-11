@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans portages_histo (Teradata)
+INSERT INTO £TD_HISTO.portages_histo (
+  id_portage,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'portabilite',
+  CURRENT_DATE,
+  COUNT(*),
+  CURRENT_TIMESTAMP
+FROM £TD_SOCLE.portages
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

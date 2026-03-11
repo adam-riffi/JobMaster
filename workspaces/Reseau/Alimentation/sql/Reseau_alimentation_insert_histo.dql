@@ -1,0 +1,7 @@
+-- Insert historique journalier sites_reseau_histo (Teradata)
+INSERT INTO £TD_HISTO.sites_reseau_histo
+SELECT
+  s.id_site, s.code_site, s.technologie, s.region, s.latitude, s.longitude, s.capacite_max_mo, s.trafic_actuel_mo, s.statut,
+  CURRENT_TIMESTAMP AS date_maj
+FROM £TD_SOCLE.sites_reseau s
+WHERE CAST(s.date_maj AS DATE) = CURRENT_DATE;

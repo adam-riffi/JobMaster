@@ -1,0 +1,28 @@
+script:
+  id_script: Consommations_Aggregat_JournalierSocle
+  description: Agrégation journalière du SOCLE cdr_voix vers l'historique
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.cdr_voix
+    TBL_HISTO: £TD_HISTO.cdr_voix_histo
+    PERIODE: £DATE
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que le SOCLE a été alimenté aujourd'hui
+      parametres:
+        Plateforme: TD
+        Requete: Consommations_aggregat_check_socle_jour.dql
+        Variable: FLAG_SOCLE_CONSOMMATIONS
+
+    - job_id: job.conditionnelle.si
+      description: Agrège uniquement si le SOCLE est à jour
+      parametres:
+        Variable: FLAG_SOCLE_CONSOMMATIONS
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: Insère les données du jour dans l'historique
+          parametres:
+            Plateforme: TD
+            Requete: Consommations_aggregat_insert_journalier.dql

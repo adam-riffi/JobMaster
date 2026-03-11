@@ -1,0 +1,16 @@
+-- MERGE staging → SOCLE paie_employes (Teradata)
+MERGE £TD_SOCLE.paie_employes AS cible
+USING £TD_TMP.staging_paie AS staging
+ON cible.id_paie = staging.id_paie
+WHEN MATCHED THEN UPDATE SET
+    cible.id_employe = staging.id_employe,
+    cible.periode = staging.periode,
+    cible.salaire_brut = staging.salaire_brut,
+    cible.cotisations_patronales = staging.cotisations_patronales,
+    cible.cotisations_salariales = staging.cotisations_salariales,
+    cible.salaire_net = staging.salaire_net,
+    cible.mode_paiement = staging.mode_paiement,
+    cible.date_virement = staging.date_virement,
+    cible.date_maj = CURRENT_TIMESTAMP
+WHEN NOT MATCHED THEN INSERT (id_paie, id_employe, periode, salaire_brut, cotisations_patronales, cotisations_salariales, salaire_net, mode_paiement, date_virement, date_maj)
+  VALUES (staging.id_paie, staging.id_employe, staging.periode, staging.salaire_brut, staging.cotisations_patronales, staging.cotisations_salariales, staging.salaire_net, staging.mode_paiement, staging.date_virement, CURRENT_TIMESTAMP);

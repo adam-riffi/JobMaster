@@ -1,0 +1,12 @@
+-- Enrichissement transverse comptes_financiers (BigQuery)
+-- Ce flux est TRANSVERSE : il emprunte des tables d'autres domaines.
+-- Référence cross-domaine : £BQ_SOCLE.factures (domaine Facturation)
+LEFT JOIN £BQ_SOCLE.factures ext_factures ON t.id_ecriture = ext_factures.id_ecriture
+-- Référence cross-domaine : £BQ_SOCLE.paiements (domaine Paiements)
+LEFT JOIN £BQ_SOCLE.paiements ext_paiements ON t.id_ecriture = ext_paiements.id_ecriture
+-- Référence cross-domaine : £TD_SOCLE.creances (domaine Recouvrement)
+LEFT JOIN £TD_SOCLE.creances ext_creances ON t.id_ecriture = ext_creances.id_ecriture
+INSERT INTO £BQ_TMP.comptes_financiers_enrichi
+SELECT
+  t.*
+FROM £BQ_SOCLE.comptes_financiers t;

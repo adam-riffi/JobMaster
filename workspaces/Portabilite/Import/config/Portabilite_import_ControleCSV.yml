@@ -1,0 +1,20 @@
+script:
+  id_script: Portabilite_Import_ControleCSV
+  description: Validation structurelle des fichiers portabilite avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\portabilite\work
+    REP_ERR: C:\data\portabilite\erreur
+    MASQUE_PORTABILITE: "^portages_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers portabilite
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_PORTABILITE
+        Colonnes: "id_portage,msisdn,operateur_source,operateur_cible,date_demande,date_portage"
+        Separateur: "|"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

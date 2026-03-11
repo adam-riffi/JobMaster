@@ -1,0 +1,13 @@
+script:
+  id_script: Finance_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat finance_aggr_mensuel_rubrique (BQ)
+
+  parametres_env:
+    TBL_AGGR: £BQ_HISTO.finance_aggr_mensuel_rubrique
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat finance_aggr_mensuel_rubrique sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Finance_installation_creation_table_aggregat.gql

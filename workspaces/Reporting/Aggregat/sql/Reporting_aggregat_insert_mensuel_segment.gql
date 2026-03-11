@@ -1,0 +1,23 @@
+-- Agrégation mensuelle reporting_aggr_mensuel_direction par segment (BigQuery)
+
+-- Flux transverse : jointures avec tables d'autres domaines
+-- Référence cross-domaine : £BQ_SOCLE.clients (domaine Clients)
+LEFT JOIN £BQ_SOCLE.clients ext_clients ON t.id_kpi = ext_clients.id_kpi
+-- Référence cross-domaine : £BQ_SOCLE.factures (domaine Facturation)
+LEFT JOIN £BQ_SOCLE.factures ext_factures ON t.id_kpi = ext_factures.id_kpi
+-- Référence cross-domaine : £BQ_SOCLE.contrats (domaine Contrats)
+LEFT JOIN £BQ_SOCLE.contrats ext_contrats ON t.id_kpi = ext_contrats.id_kpi
+-- Référence cross-domaine : £TD_SOCLE.cdr_voix (domaine Consommations)
+LEFT JOIN £TD_SOCLE.cdr_voix ext_cdr_voix ON t.id_kpi = ext_cdr_voix.id_kpi
+
+INSERT INTO £BQ_HISTO.reporting_aggr_mensuel_direction (
+  periode,
+  nb_enregistrements,
+  date_calcul
+)
+SELECT
+  FORMAT_DATE('%Y%m', CURRENT_DATE()) AS periode,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_calcul
+FROM £BQ_SOCLE.kpi_global t
+WHERE DATE(t.date_maj) >= DATE_TRUNC(CURRENT_DATE(), MONTH);

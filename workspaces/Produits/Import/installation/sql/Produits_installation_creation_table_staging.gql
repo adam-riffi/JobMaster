@@ -1,0 +1,13 @@
+-- Création de la table staging staging_produits (BigQuery)
+CREATE TABLE IF NOT EXISTS £BQ_TMP.staging_produits (
+  id_produit                          STRING NOT NULL
+  libelle                             STRING
+  type_produit                        STRING
+  technologie                         STRING
+  prix_ht                             NUMERIC
+  prix_ttc                            NUMERIC
+  actif                               BOOL
+  date_lancement                      DATE
+  date_maj                            TIMESTAMP
+)
+OPTIONS (expiration_timestamp = NULL);

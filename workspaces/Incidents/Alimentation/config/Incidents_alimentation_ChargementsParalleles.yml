@@ -1,0 +1,23 @@
+script:
+  id_script: Incidents_Alimentation_ChargementsParalleles
+  description: Chargement parallèle du SOCLE et de la table historique incidents
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.incidents
+    TBL_HISTO: £TD_HISTO.incidents_histo
+
+  jobs:
+    - job_id: job.process.parallele
+      description: Alimente SOCLE et HISTO simultanément
+      jobs:
+        - job_id: job.run.sql
+          description: Upsert SOCLE incidents
+          parametres:
+            Plateforme: TD
+            Requete: Incidents_alimentation_upsert_socle.dql
+
+        - job_id: job.run.sql
+          description: Insert historique incidents_histo
+          parametres:
+            Plateforme: TD
+            Requete: Incidents_alimentation_insert_histo.dql

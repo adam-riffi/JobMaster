@@ -1,0 +1,28 @@
+script:
+  id_script: Marketing_Aggregat_JournalierSocle
+  description: Agrégation journalière du SOCLE campagnes vers l'historique
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.campagnes
+    TBL_HISTO: £BQ_HISTO.campagnes_histo
+    PERIODE: £DATE
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que le SOCLE a été alimenté aujourd'hui
+      parametres:
+        Plateforme: BQ
+        Requete: Marketing_aggregat_check_socle_jour.gql
+        Variable: FLAG_SOCLE_MARKETING
+
+    - job_id: job.conditionnelle.si
+      description: Agrège uniquement si le SOCLE est à jour
+      parametres:
+        Variable: FLAG_SOCLE_MARKETING
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: Insère les données du jour dans l'historique
+          parametres:
+            Plateforme: BQ
+            Requete: Marketing_aggregat_insert_journalier.gql

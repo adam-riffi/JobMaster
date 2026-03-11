@@ -1,0 +1,33 @@
+script:
+  id_script: Consommations_Alimentation_UpsertSocle
+  description: Alimentation du SOCLE cdr_voix depuis la staging par MERGE/UPSERT
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_cdr_voix
+    TBL_SOCLE: £TD_SOCLE.cdr_voix
+
+  jobs:
+    - job_id: job.run.sql
+      description: Vérifie que la staging contient des données
+      parametres:
+        Plateforme: TD
+        Requete: Consommations_alimentation_check_staging.dql
+        Variable: FLAG_STAGING_CONSOMMATIONS
+
+    - job_id: job.conditionnelle.si
+      description: Upsert uniquement si la staging est peuplée
+      parametres:
+        Variable: FLAG_STAGING_CONSOMMATIONS
+        Valeur: "OUI"
+      jobs:
+        - job_id: job.run.sql
+          description: MERGE staging → SOCLE cdr_voix
+          parametres:
+            Plateforme: TD
+            Requete: Consommations_alimentation_upsert_socle.dql
+
+        - job_id: job.run.create_view
+          description: Rafraîchit la vue métier cdr_voix
+          parametres:
+            Plateforme: TD
+            Table: £TBL_SOCLE

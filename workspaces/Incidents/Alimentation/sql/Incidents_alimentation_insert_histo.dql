@@ -1,0 +1,7 @@
+-- Insert historique journalier incidents_histo (Teradata)
+INSERT INTO £TD_HISTO.incidents_histo
+SELECT
+  s.id_incident, s.id_site, s.date_debut, s.heure_debut, s.date_fin, s.severite, s.type_incident, s.zones_impactees, s.nb_clients_touches, s.statut,
+  CURRENT_TIMESTAMP AS date_maj
+FROM £TD_SOCLE.incidents s
+WHERE CAST(s.date_maj AS DATE) = CURRENT_DATE;

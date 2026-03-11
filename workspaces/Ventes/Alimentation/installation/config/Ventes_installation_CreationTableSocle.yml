@@ -1,0 +1,13 @@
+script:
+  id_script: Ventes_Installation_CreationTableSocle
+  description: Création initiale de la table SOCLE ventes (BQ)
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.ventes
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table SOCLE ventes sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Ventes_installation_creation_table_socle.gql

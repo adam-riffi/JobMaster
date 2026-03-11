@@ -1,0 +1,13 @@
+script:
+  id_script: Fraude_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat fraude_aggr_mensuel_type (TD)
+
+  parametres_env:
+    TBL_AGGR: £TD_HISTO.fraude_aggr_mensuel_type
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat fraude_aggr_mensuel_type sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Fraude_installation_creation_table_aggregat.dql

@@ -1,0 +1,20 @@
+script:
+  id_script: Interconnexion_Import_ControleCSV
+  description: Validation structurelle des fichiers interconnexion avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\interconnexion\work
+    REP_ERR: C:\data\interconnexion\erreur
+    MASQUE_INTERCONNEXION: "^interconnexion_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers interconnexion
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_INTERCONNEXION
+        Colonnes: "id_interconnexion,operateur_source,operateur_cible,date_transit,type_trafic,volume_minutes"
+        Separateur: "|"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

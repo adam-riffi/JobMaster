@@ -1,0 +1,35 @@
+script:
+  id_script: Commandes_Export_EnvoiSFTP
+  description: Envoi des fichiers CSV commandes vers le SFTP de distribution
+
+  parametres_env:
+    REP_EXPORT: C:\data\commandes\export
+    SFTP_DEST: sftp://distribution/commandes/out
+    MASQUE_EXPORT: "^commandes_\\d{8}\\.csv$"
+
+  jobs:
+    - job_id: job.fichier.comptage
+      description: Vérifie qu'il y a des fichiers à envoyer
+      parametres:
+        Source: £REP_EXPORT
+        Masque: £MASQUE_EXPORT
+        Variable: NB_EXPORT_COMMANDES
+
+    - job_id: job.conditionnelle.si
+      description: Envoie uniquement si des fichiers sont disponibles
+      parametres:
+        Variable: NB_EXPORT_COMMANDES
+        Valeur: "0"
+
+    - job_id: job.externe.export
+      description: Envoie les CSV vers le SFTP de distribution
+      parametres:
+        Source: £REP_EXPORT
+        Cible: £SFTP_DEST
+        Type: sftp
+
+    - job_id: job.fichier.effacement
+      description: Purge les exports de plus de 1 mois
+      parametres:
+        Source: £REP_EXPORT
+        Duree: 1

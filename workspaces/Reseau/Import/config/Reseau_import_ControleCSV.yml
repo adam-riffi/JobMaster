@@ -1,0 +1,20 @@
+script:
+  id_script: Reseau_Import_ControleCSV
+  description: Validation structurelle des fichiers reseau avant chargement en staging
+
+  parametres_env:
+    REP_WORK: C:\data\reseau\work
+    REP_ERR: C:\data\reseau\erreur
+    MASQUE_RESEAU: "^sites_reseau_\d{8}\.csv$"
+
+  jobs:
+    - job_id: job.fichier.controle
+      description: Valide le format et les colonnes des fichiers reseau
+      parametres:
+        Source: £REP_WORK
+        Masque: £MASQUE_RESEAU
+        Colonnes: "id_site,code_site,technologie,region,latitude,longitude"
+        Separateur: "|"
+        Encodage: UTF-8
+        NonVide: true
+        RepertoireErreur: £REP_ERR

@@ -1,0 +1,7 @@
+-- Insert historique journalier interconnexion_histo (Teradata)
+INSERT INTO £TD_HISTO.interconnexion_histo
+SELECT
+  s.id_interconnexion, s.operateur_source, s.operateur_cible, s.date_transit, s.type_trafic, s.volume_minutes, s.tarif_minute, s.montant_total, s.statut_facturation,
+  CURRENT_TIMESTAMP AS date_maj
+FROM £TD_SOCLE.interconnexion s
+WHERE CAST(s.date_maj AS DATE) = CURRENT_DATE;

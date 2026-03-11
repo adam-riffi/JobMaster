@@ -1,0 +1,25 @@
+-- Chargement des fichiers roaming dans la table staging Teradata
+INSERT INTO £TD_TMP.staging_roaming (
+  id_roaming,
+  id_client,
+  date_debut,
+  pays,
+  operateur_partenaire,
+  type_trafic,
+  volume_mo,
+  duree_secondes,
+  cout_euros,
+  date_maj
+)
+SELECT
+  id_roaming,
+  id_client,
+  date_debut,
+  pays,
+  operateur_partenaire,
+  type_trafic,
+  volume_mo,
+  duree_secondes,
+  cout_euros,
+  date_maj
+FROM £TD_TMP.ext_staging_roaming;

@@ -1,0 +1,17 @@
+-- MERGE staging → SOCLE incidents (Teradata)
+MERGE £TD_SOCLE.incidents AS cible
+USING £TD_TMP.staging_incidents AS staging
+ON cible.id_incident = staging.id_incident
+WHEN MATCHED THEN UPDATE SET
+    cible.id_site = staging.id_site,
+    cible.date_debut = staging.date_debut,
+    cible.heure_debut = staging.heure_debut,
+    cible.date_fin = staging.date_fin,
+    cible.severite = staging.severite,
+    cible.type_incident = staging.type_incident,
+    cible.zones_impactees = staging.zones_impactees,
+    cible.nb_clients_touches = staging.nb_clients_touches,
+    cible.statut = staging.statut,
+    cible.date_maj = CURRENT_TIMESTAMP
+WHEN NOT MATCHED THEN INSERT (id_incident, id_site, date_debut, heure_debut, date_fin, severite, type_incident, zones_impactees, nb_clients_touches, statut, date_maj)
+  VALUES (staging.id_incident, staging.id_site, staging.date_debut, staging.heure_debut, staging.date_fin, staging.severite, staging.type_incident, staging.zones_impactees, staging.nb_clients_touches, staging.statut, CURRENT_TIMESTAMP);

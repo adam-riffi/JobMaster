@@ -1,0 +1,14 @@
+-- Insertion agrégat journalier dans creances_histo (Teradata)
+INSERT INTO £TD_HISTO.creances_histo (
+  id_creance,
+  date_agregat,
+  nb_enregistrements,
+  date_maj
+)
+SELECT
+  'recouvrement',
+  CURRENT_DATE,
+  COUNT(*),
+  CURRENT_TIMESTAMP
+FROM £TD_SOCLE.creances
+WHERE CAST(date_maj AS DATE) = CURRENT_DATE;

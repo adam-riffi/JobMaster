@@ -1,0 +1,7 @@
+-- Insert historique journalier commandes_histo (BigQuery)
+INSERT INTO £BQ_HISTO.commandes_histo
+SELECT
+  s.id_commande, s.id_client, s.id_produit, s.date_commande, s.statut, s.canal_vente, s.montant_total, s.date_livraison,
+  CURRENT_TIMESTAMP() AS date_maj
+FROM £BQ_SOCLE.commandes s
+WHERE DATE(s.date_maj) = CURRENT_DATE();

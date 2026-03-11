@@ -1,0 +1,13 @@
+script:
+  id_script: Commandes_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat commandes_aggr_journalier (BQ)
+
+  parametres_env:
+    TBL_AGGR: £BQ_HISTO.commandes_aggr_journalier
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat commandes_aggr_journalier sur BQ
+      parametres:
+        Plateforme: BQ
+        Requete: Commandes_installation_creation_table_aggregat.gql

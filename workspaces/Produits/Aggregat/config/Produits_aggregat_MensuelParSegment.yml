@@ -1,0 +1,21 @@
+script:
+  id_script: Produits_Aggregat_MensuelParSegment
+  description: Agrégation mensuelle du SOCLE produits par segment métier
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.produits
+    TBL_AGGR: £BQ_HISTO.produits_aggr_ventes_mensuel
+    PERIODE: £YEAR£MONTH
+
+  jobs:
+    - job_id: job.run.sql
+      description: Supprime les agrégats du mois courant avant recalcul
+      parametres:
+        Plateforme: BQ
+        Requete: Produits_aggregat_delete_mensuel.gql
+
+    - job_id: job.run.sql
+      description: Calcule et insère les agrégats mensuels par segment
+      parametres:
+        Plateforme: BQ
+        Requete: Produits_aggregat_insert_mensuel_segment.gql

@@ -1,0 +1,13 @@
+-- Agrégation mensuelle clients_aggr_mensuel par segment (BigQuery)
+
+INSERT INTO £BQ_HISTO.clients_aggr_mensuel (
+  periode,
+  nb_enregistrements,
+  date_calcul
+)
+SELECT
+  FORMAT_DATE('%Y%m', CURRENT_DATE()) AS periode,
+  COUNT(*) AS nb_enregistrements,
+  CURRENT_TIMESTAMP() AS date_calcul
+FROM £BQ_SOCLE.clients t
+WHERE DATE(t.date_maj) >= DATE_TRUNC(CURRENT_DATE(), MONTH);

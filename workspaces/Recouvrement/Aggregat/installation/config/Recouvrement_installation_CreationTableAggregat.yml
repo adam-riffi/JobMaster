@@ -1,0 +1,13 @@
+script:
+  id_script: Recouvrement_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat recouvrement_aggr_mensuel_statut (TD)
+
+  parametres_env:
+    TBL_AGGR: £TD_HISTO.recouvrement_aggr_mensuel_statut
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat recouvrement_aggr_mensuel_statut sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Recouvrement_installation_creation_table_aggregat.dql

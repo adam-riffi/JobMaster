@@ -1,0 +1,7 @@
+-- Insert historique journalier paie_histo (Teradata)
+INSERT INTO £TD_HISTO.paie_histo
+SELECT
+  s.id_paie, s.id_employe, s.periode, s.salaire_brut, s.cotisations_patronales, s.cotisations_salariales, s.salaire_net, s.mode_paiement, s.date_virement,
+  CURRENT_TIMESTAMP AS date_maj
+FROM £TD_SOCLE.paie_employes s
+WHERE CAST(s.date_maj AS DATE) = CURRENT_DATE;

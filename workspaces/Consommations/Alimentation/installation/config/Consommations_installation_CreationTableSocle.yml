@@ -1,0 +1,13 @@
+script:
+  id_script: Consommations_Installation_CreationTableSocle
+  description: Création initiale de la table SOCLE cdr_voix (TD)
+
+  parametres_env:
+    TBL_SOCLE: £TD_SOCLE.cdr_voix
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table SOCLE cdr_voix sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Consommations_installation_creation_table_socle.dql

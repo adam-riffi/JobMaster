@@ -1,0 +1,18 @@
+script:
+  id_script: ServiceClient_Export_ExtractionCSV
+  description: Extraction du SOCLE interactions vers fichiers CSV datés
+
+  parametres_env:
+    TBL_SOCLE: £BQ_SOCLE.interactions
+    REP_EXPORT: C:\data\service_client\export
+    NOM_FICHIER: serviceclient_£DATE.csv
+
+  jobs:
+    - job_id: job.table.extraction
+      description: Extrait la table interactions en CSV
+      parametres:
+        Plateforme: BQ
+        TableSource: £TBL_SOCLE
+        Destination: £REP_EXPORT
+        NomFichier: £NOM_FICHIER
+        Format: csv

@@ -1,0 +1,13 @@
+script:
+  id_script: Roaming_Installation_CreationTableAggregat
+  description: Création initiale de la table agrégat roaming_aggr_mensuel_pays (TD)
+
+  parametres_env:
+    TBL_AGGR: £TD_HISTO.roaming_aggr_mensuel_pays
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table agrégat roaming_aggr_mensuel_pays sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Roaming_installation_creation_table_aggregat.dql

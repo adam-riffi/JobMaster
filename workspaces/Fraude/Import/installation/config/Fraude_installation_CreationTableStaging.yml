@@ -1,0 +1,13 @@
+script:
+  id_script: Fraude_Installation_CreationTableStaging
+  description: Création initiale de la table staging staging_alertes_fraude (TD)
+
+  parametres_env:
+    TBL_STAGING: £TD_TMP.staging_alertes_fraude
+
+  jobs:
+    - job_id: job.run.sql
+      description: Crée la table staging staging_alertes_fraude sur TD
+      parametres:
+        Plateforme: TD
+        Requete: Fraude_installation_creation_table_staging.dql
