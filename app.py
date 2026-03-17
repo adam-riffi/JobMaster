@@ -33,10 +33,6 @@ def _quick_stats() -> tuple[int, int, int, int]:
 
 # ── Header ────────────────────────────────────────────────────────────────────
 st.title("⚡ Aleister")
-st.caption(
-    "Intelligence opérationnelle pour les flux **JobMaster** — "
-    "Télécom Data Engineering"
-)
 st.divider()
 
 # ── Stats ─────────────────────────────────────────────────────────────────────
